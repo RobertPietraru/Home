@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:homeapp/core/utils/translator.dart';
-import 'package:homeapp/features/authentication/domain/failures/auth_failure.dart';
+import '../../../../../../packages/auth/lib/domain/failures/auth_failure.dart';
 
 class AuthPasswordEmptyValidationFailure extends AuthValidationFailure {
   AuthPasswordEmptyValidationFailure({super.code = 'empty-password'});

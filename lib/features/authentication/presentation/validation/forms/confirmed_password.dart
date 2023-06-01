@@ -1,5 +1,5 @@
 import 'package:formz/formz.dart';
-import 'package:homeapp/features/authentication/domain/failures/auth_failure.dart';
+import '../../../../../../packages/auth/lib/domain/failures/auth_failure.dart';
 import 'package:homeapp/features/authentication/presentation/validation/errors/confirm_password_validation_failures.dart';
 
 class ConfirmedPassword extends FormzInput<String, AuthValidationFailure> {

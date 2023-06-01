@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:homeapp/features/authentication/domain/failures/auth_failure.dart';
+import '../../domain/failures/auth_failure.dart';
 
 import '../../domain/auth_domain.dart';
 import '../dtos/user_dto.dart';

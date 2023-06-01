@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import 'package:formz/formz.dart';
-import 'package:homeapp/features/authentication/domain/failures/auth_failure.dart';
+import '../../../../../../packages/auth/lib/domain/failures/auth_failure.dart';
 import 'package:homeapp/features/authentication/presentation/validation/errors/email_validation_failures.dart';
 
 /// {@template email}

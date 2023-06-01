@@ -5,7 +5,7 @@ import 'package:homeapp/core/components/buttons/long_button.dart';
 import 'package:homeapp/core/components/text_input_field.dart';
 import 'package:homeapp/core/components/theme/app_theme.dart';
 import 'package:homeapp/core/utils/translator.dart';
-import 'package:homeapp/features/authentication/domain/failures/auth_failure.dart';
+import '../../../../../../packages/auth/lib/domain/failures/auth_failure.dart';
 import 'package:homeapp/features/authentication/presentation/auth_bloc/auth_bloc.dart';
 import 'package:homeapp/features/authentication/presentation/screens/login/cubit/login_cubit.dart';
 import 'package:homeapp/features/authentication/presentation/screens/registration/registration_screen.dart';

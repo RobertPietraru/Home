@@ -1,5 +1,5 @@
-import 'package:homeapp/features/authentication/domain/failures/auth_failure.dart';
-import 'package:homeapp/features/authentication/domain/failures/email_failures.dart';
+import '../../domain/failures/auth_failure.dart';
+import '../../domain/failures/email_failures.dart';
 
 class AuthFailureDto {
   static AuthFailure fromFirebaseErrorCode(String code) {

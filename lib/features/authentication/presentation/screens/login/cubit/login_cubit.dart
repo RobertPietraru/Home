@@ -2,8 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../domain/failures/auth_failure.dart';
-import '../../../../domain/usecases/login_usecase.dart';
+import '../../../../../../../packages/auth/lib/domain/failures/auth_failure.dart';
+import '../../../../../../../packages/auth/lib/domain/usecases/login_usecase.dart';
 import '../../../auth_bloc/auth_bloc.dart';
 import '../../../validation/forms/email.dart';
 import '../../../validation/forms/password.dart';
