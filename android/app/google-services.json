@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "457057212276",
+    "firebase_url": "https://testador-5b80a-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "testador-5b80a",
+    "storage_bucket": "testador-5b80a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:457057212276:android:7df45c2b8b47aca068fe21",
+        "android_client_info": {
+          "package_name": "com.example.testador"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "457057212276-tcjt8kl0u0s9nelifl2smqlrk0u1hiap.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-GgCIRxVrrwxzokfZBRB5qVdGjY9rdGo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "457057212276-tcjt8kl0u0s9nelifl2smqlrk0u1hiap.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "457057212276-6asomabq3l14rvrkcgse7c3aom58iktq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.testador"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

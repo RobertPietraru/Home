@@ -1,0 +1,5 @@
+
+# echo  "import 'package:dartz/dartz.dart'; import 'package:quizador/features/domain/repositories/quiz_repository.dart'; class ${2} extends UseCase<Result, ${2}Params> { const ${2}(this.quizRepository); final QuizRepository quizRepository; @override Future<Either<QuizFailure, Result>> call(params) async { return quizRepository.${3}(params); } } class ${2}Params extends Params { const ${2}Params(); }" > $1
+
+
+echo "  import 'package:dartz/dartz.dart'; import '../../../../../core/classes/usecase.dart'; import '../../failures/quiz_failures.dart'; import '../../repositories/quiz_repository.dart'; class ${2}Usecase extends UseCase<${2}UsecaseResult, ${2}UsecaseParams> { const ${2}Usecase(this.quizRepository); final QuizRepository quizRepository; @override Future<Either<QuizFailure, ${2}UsecaseResult>> call(params) async { return quizRepository.${3}(params); } } class ${2}UsecaseParams extends Params { const ${2}UsecaseParams(); } class ${2}UsecaseResult extends Response { const ${2}UsecaseResult(); }"> $1
