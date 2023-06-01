@@ -1,6 +1,6 @@
 import 'package:formz/formz.dart';
-import 'package:testador/features/authentication/domain/failures/auth_failure.dart';
-import 'package:testador/features/authentication/presentation/validation/errors/confirm_password_validation_failures.dart';
+import 'package:homeapp/features/authentication/domain/failures/auth_failure.dart';
+import 'package:homeapp/features/authentication/presentation/validation/errors/confirm_password_validation_failures.dart';
 
 class ConfirmedPassword extends FormzInput<String, AuthValidationFailure> {
   const ConfirmedPassword.pure({this.password = ''}) : super.pure('');

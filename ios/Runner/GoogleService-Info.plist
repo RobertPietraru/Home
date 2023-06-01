@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.testador</string>
+	<string>com.pietrocka.home</string>
 	<key>PROJECT_ID</key>
 	<string>skeleton-a3bd2</string>
 	<key>STORAGE_BUCKET</key>

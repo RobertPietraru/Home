@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:auto_route/auto_route.dart';
 
 import 'package:flutter/services.dart';
-import 'package:testador/core/components/components.dart';
-import 'package:testador/core/language_cubit/language_cubit.dart';
-import 'package:testador/core/routing/app_router.gr.dart';
-import 'package:testador/core/utils/translator.dart';
-import 'package:testador/features/authentication/presentation/auth_bloc/auth_bloc.dart';
+import 'package:homeapp/core/components/components.dart';
+import 'package:homeapp/core/language_cubit/language_cubit.dart';
+import 'package:homeapp/core/utils/translator.dart';
+import 'package:homeapp/features/authentication/presentation/auth_bloc/auth_bloc.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showLeading;
@@ -48,7 +46,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               AppLogo(color: mainColor ?? theme.primaryColor),
               const SizedBox(width: 10),
               Text(
-                "Testador",
+                "home",
                 style: TextStyle(
                   color: mainColor ?? theme.primaryColor,
                   fontWeight: FontWeight.bold,
@@ -62,11 +60,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             if (showPlay)
               TextButton(
                   onPressed: () {
-                    if (DeviceSize.isDesktopMode) {
-                      context.navigateTo(const PlayerSessionManagerRoute());
-                    } else {
-                      context.pushRoute(const PlayerSessionManagerRoute());
-                    }
                   },
                   child: Text(context.translator.play,
                       style: theme.actionTextStyle)),
@@ -95,7 +88,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 if (state is AuthAuthenticatedState) {
                   return IconButton(
                       onPressed: () {
-                        context.read<AuthBloc>().add(AuthUserLoggedOut());
+                        context.read<AuthBloc>().add(const AuthUserLoggedOut());
                       },
                       icon: const Icon(Icons.logout));
                 }

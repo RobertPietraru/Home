@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:testador/features/authentication/presentation/validation/forms/confirmed_password.dart';
+import 'package:homeapp/features/authentication/presentation/validation/forms/confirmed_password.dart';
 import '../../../../domain/failures/auth_failure.dart';
 import '../../../../domain/usecases/register_usecase.dart';
 import '../../../auth_bloc/auth_bloc.dart';

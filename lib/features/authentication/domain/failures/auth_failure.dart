@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:testador/core/utils/translator.dart';
+import 'package:homeapp/core/utils/translator.dart';
 
 import '../../../../core/classes/failure.dart';
 

@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../../core/classes/usecase.dart';
 import '../auth_domain.dart';
 import '../failures/auth_failure.dart';
 

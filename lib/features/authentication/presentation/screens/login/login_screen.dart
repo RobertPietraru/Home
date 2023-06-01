@@ -1,20 +1,18 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:testador/core/components/custom_app_bar.dart';
-import 'package:testador/core/components/buttons/long_button.dart';
-import 'package:testador/core/components/text_input_field.dart';
-import 'package:testador/core/components/theme/app_theme.dart';
-import 'package:testador/core/utils/translator.dart';
-import 'package:testador/features/authentication/domain/failures/auth_failure.dart';
-import 'package:testador/features/authentication/presentation/auth_bloc/auth_bloc.dart';
-import 'package:testador/features/authentication/presentation/screens/login/cubit/login_cubit.dart';
-import 'package:testador/injection.dart';
+import 'package:homeapp/core/components/custom_app_bar.dart';
+import 'package:homeapp/core/components/buttons/long_button.dart';
+import 'package:homeapp/core/components/text_input_field.dart';
+import 'package:homeapp/core/components/theme/app_theme.dart';
+import 'package:homeapp/core/utils/translator.dart';
+import 'package:homeapp/features/authentication/domain/failures/auth_failure.dart';
+import 'package:homeapp/features/authentication/presentation/auth_bloc/auth_bloc.dart';
+import 'package:homeapp/features/authentication/presentation/screens/login/cubit/login_cubit.dart';
+import 'package:homeapp/features/authentication/presentation/screens/registration/registration_screen.dart';
+import 'package:homeapp/injection.dart';
 
 import '../../../../../core/components/custom_dialog.dart';
-import '../../../../../core/routing/app_router.gr.dart';
 
-@RoutePage(name: 'LoginDialogRoute')
 class LoginDialog extends StatelessWidget {
   const LoginDialog({super.key});
 
@@ -30,7 +28,6 @@ class LoginDialog extends StatelessWidget {
   }
 }
 
-@RoutePage()
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
@@ -56,9 +53,7 @@ class _LoginView extends StatelessWidget {
       child: BlocConsumer<LoginCubit, LoginState>(
         listener: (context, state) {
           if (state.isSuccessful) {
-            // look, I don't know why it is this way, but it works nonetheless, so watchu gonna do?
-            context.router.popUntilRoot();
-            context.router.pop();
+            Navigator.popUntil(context, (route) => route.isFirst);
           }
         },
         builder: (context, state) {
@@ -107,8 +102,11 @@ class _LoginView extends StatelessWidget {
                 SizedBox(height: theme.spacing.xxLarge),
                 Center(
                   child: TextButton(
-                      onPressed: () =>
-                          context.router.replace(const RegistrationRoute()),
+                      onPressed: () => Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const RegistrationScreen())),
                       child: RichText(
                         text: TextSpan(children: [
                           TextSpan(

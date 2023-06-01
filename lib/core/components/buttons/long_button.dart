@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:testador/core/components/gradient_text.dart';
-import 'package:testador/core/components/theme/app_theme_data.dart';
+import 'package:homeapp/core/components/gradient_text.dart';
+import 'package:homeapp/core/components/theme/app_theme_data.dart';
 
 import '../theme/app_theme.dart';
 

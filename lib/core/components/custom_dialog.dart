@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:testador/core/components/theme/app_theme.dart';
-import 'package:testador/core/components/theme/device_size.dart';
+import 'package:homeapp/core/components/theme/app_theme.dart';
+import 'package:homeapp/core/components/theme/device_size.dart';
 
 class CustomDialog extends StatelessWidget {
   const CustomDialog({

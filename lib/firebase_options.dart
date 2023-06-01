@@ -17,7 +17,10 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -45,34 +48,22 @@ class DefaultFirebaseOptions {
         );
     }
   }
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBUQ8ca-7owhmXOhiStTYmQ27pnq8DeR2E',
-    appId: '1:457057212276:web:b7677107adc27f2a68fe21',
-    messagingSenderId: '457057212276',
-    projectId: 'testador-5b80a',
-    authDomain: 'testador-5b80a.firebaseapp.com',
-    databaseURL: 'https://testador-5b80a-default-rtdb.europe-west1.firebasedatabase.app',
-    storageBucket: 'testador-5b80a.appspot.com',
-    measurementId: 'G-WZJ89Z2REV',
-  );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyD-GgCIRxVrrwxzokfZBRB5qVdGjY9rdGo',
-    appId: '1:457057212276:android:7df45c2b8b47aca068fe21',
-    messagingSenderId: '457057212276',
-    projectId: 'testador-5b80a',
-    databaseURL: 'https://testador-5b80a-default-rtdb.europe-west1.firebasedatabase.app',
-    storageBucket: 'testador-5b80a.appspot.com',
+    apiKey: 'AIzaSyC5fMH-VLysLejsXdhj9aN3JXFvMX3RgZo',
+    appId: '1:813703206160:android:50b70e6714f929cadf8195',
+    messagingSenderId: '813703206160',
+    projectId: 'pietrockahome',
+    storageBucket: 'pietrockahome.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAyHcTwox7cNXxDbeM-6MgRO7kQan1Gq84',
-    appId: '1:457057212276:ios:3d2c924c881d85e868fe21',
-    messagingSenderId: '457057212276',
-    projectId: 'testador-5b80a',
-    databaseURL: 'https://testador-5b80a-default-rtdb.europe-west1.firebasedatabase.app',
-    storageBucket: 'testador-5b80a.appspot.com',
-    iosClientId: '457057212276-6asomabq3l14rvrkcgse7c3aom58iktq.apps.googleusercontent.com',
-    iosBundleId: 'com.example.testador',
+    apiKey: 'AIzaSyBa5J-p-wUeIkrII9lXHq6Iu-vuD5vgzyI',
+    appId: '1:813703206160:ios:37f72daba31dd111df8195',
+    messagingSenderId: '813703206160',
+    projectId: 'pietrockahome',
+    storageBucket: 'pietrockahome.appspot.com',
+    iosClientId: '813703206160-bh84soa90i30bkp4cn65mpuodgffjcle.apps.googleusercontent.com',
+    iosBundleId: 'com.pietrocka.home',
   );
 }

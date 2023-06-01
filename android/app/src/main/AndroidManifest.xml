@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.testador">
+    package="com.pietrocka.home">
    <application
-        android:label="testador"
+        android:label="homeapp"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

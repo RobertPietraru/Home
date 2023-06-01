@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import 'package:formz/formz.dart';
-import 'package:testador/features/authentication/presentation/validation/errors/password_validation_failures.dart';
+import 'package:homeapp/features/authentication/presentation/validation/errors/password_validation_failures.dart';
 
 import '../../../domain/failures/auth_failure.dart';
 

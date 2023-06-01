@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:testador/core/components/theme/app_theme.dart';
+import 'package:homeapp/core/components/theme/app_theme.dart';
 
 class LoadingWrapper extends StatelessWidget {
   final Widget child;

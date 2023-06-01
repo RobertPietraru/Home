@@ -1,21 +1,18 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:testador/core/components/custom_app_bar.dart';
-import 'package:testador/core/components/theme/device_size.dart';
-import 'package:testador/core/utils/translator.dart';
-import 'package:testador/features/authentication/presentation/auth_bloc/auth_bloc.dart';
-import 'package:testador/features/authentication/presentation/screens/login/login_screen.dart';
-import 'package:testador/features/authentication/presentation/screens/registration/cubit/registration_cubit.dart';
-import 'package:testador/injection.dart';
+import 'package:homeapp/core/components/custom_app_bar.dart';
+import 'package:homeapp/core/components/theme/device_size.dart';
+import 'package:homeapp/core/utils/translator.dart';
+import 'package:homeapp/features/authentication/presentation/auth_bloc/auth_bloc.dart';
+import 'package:homeapp/features/authentication/presentation/screens/login/login_screen.dart';
+import 'package:homeapp/features/authentication/presentation/screens/registration/cubit/registration_cubit.dart';
+import 'package:homeapp/injection.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../../../core/components/buttons/long_button.dart';
 import '../../../../../core/components/text_input_field.dart';
 import '../../../../../core/components/theme/app_theme.dart';
-import '../../../../../core/routing/app_router.gr.dart';
 
-@RoutePage()
 class RegistrationScreen extends StatelessWidget {
   const RegistrationScreen({super.key});
 
@@ -38,10 +35,7 @@ class _RegistrationScreen extends StatelessWidget {
       body: BlocConsumer<RegistrationCubit, RegistrationState>(
         listener: (context, state) {
           if (state.isSuccessful) {
-            // look, I don't know why it is this way, but it works nonetheless, so watchu gonna do?
-            context.router.popUntilRoot();
-            context.router.pop();
-            // context.router.root.push(const ProtectedFlowRoute());
+            Navigator.popUntil(context, (route) => route.isFirst);
           }
         },
         builder: (context, state) {
@@ -114,7 +108,11 @@ class _RegistrationScreen extends StatelessWidget {
                                         const LoginDialog(),
                                   );
                                 } else {
-                                  context.router.replace(const LoginRoute());
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const LoginScreen()));
                                 }
                               },
                               child: RichText(

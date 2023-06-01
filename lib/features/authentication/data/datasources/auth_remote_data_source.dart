@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:testador/features/authentication/domain/failures/auth_failure.dart';
+import 'package:homeapp/features/authentication/domain/failures/auth_failure.dart';
 
 import '../../domain/auth_domain.dart';
 import '../dtos/user_dto.dart';
@@ -15,7 +15,6 @@ abstract class AuthRemoteDataSource {
 
 class AuthFirebaseDataSourceIMPL implements AuthRemoteDataSource {
   AuthFirebaseDataSourceIMPL();
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   @override
   Future<UserDto> registerUser(RegisterParams params) async {
