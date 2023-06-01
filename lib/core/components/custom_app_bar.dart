@@ -5,7 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:homeapp/core/components/components.dart';
 import 'package:homeapp/core/language_cubit/language_cubit.dart';
 import 'package:homeapp/core/utils/translator.dart';
-import 'package:homeapp/features/authentication/presentation/auth_bloc/auth_bloc.dart';
+
+import '../../app/auth/auth_bloc/auth_bloc.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showLeading;
@@ -59,8 +60,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           [
             if (showPlay)
               TextButton(
-                  onPressed: () {
-                  },
+                  onPressed: () {},
                   child: Text(context.translator.play,
                       style: theme.actionTextStyle)),
             BlocBuilder<LanguageCubit, LanguageState>(
@@ -87,9 +87,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               builder: (context, state) {
                 if (state is AuthAuthenticatedState) {
                   return IconButton(
-                      onPressed: () {
-                        context.read<AuthBloc>().add(const AuthUserLoggedOut());
-                      },
+                      onPressed: () => context
+                          .read<AuthBloc>()
+                          .add(const AuthUserLoggedOut()),
                       icon: const Icon(Icons.logout));
                 }
                 return Container();

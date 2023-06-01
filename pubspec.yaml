@@ -61,6 +61,8 @@ dependencies:
   shared_preferences: ^2.1.1
   dart_openai: ^1.9.91
   flutter_dotenv: ^5.0.2
+  auth:
+    path: packages/auth
 
 dev_dependencies:
   build_runner: ^2.3.3

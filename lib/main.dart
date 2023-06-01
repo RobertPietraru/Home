@@ -3,12 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:homeapp/core/language_cubit/language_cubit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:homeapp/features/authentication/presentation/auth_bloc/auth_bloc.dart';
-
 import '../core/components/theme/app_theme.dart';
 import '../core/components/theme/app_theme_data.dart';
-import '../features/authentication/presentation/widgets/auth_bloc_wrapper.dart';
 import '../injection.dart';
+import 'app/auth/auth_bloc/auth_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +14,8 @@ void main() async {
   await Hive.initFlutter();
   await initialize();
 
-  runApp(const AuthBlocWidget(child: MyApp()));
+  runApp(
+      BlocProvider(create: (context) => AuthBloc(locator()), child: const MyApp()));
 }
 
 class MyApp extends StatefulWidget {
