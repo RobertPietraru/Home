@@ -101,6 +101,8 @@
   "invalidInputTaskError": "The input you provided is invalid",
   "internalTaskError": "There was an internal error",
   "homeNotFoundTaskError": "The home you were looking for was not found",
-  "abortedTaskError": "The action was aborted"
+  "abortedTaskError": "The action was aborted",
+  "homeIdEmptyValidationError": "You need to provide a home id",
+  "homeNameEmptyValidationError": "You need to provide a home name"
 }
 

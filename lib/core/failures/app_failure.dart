@@ -1,5 +1,7 @@
 import 'package:auth/auth.dart';
 import 'package:equatable/equatable.dart';
+import 'package:homeapp/app/home/validation/failures/home_id_empty_validation_failure.dart';
+import 'package:homeapp/app/home/validation/failures/home_name_empty_validation_failure.dart';
 import 'package:homeapp/core/failures/validation_failure.dart';
 import 'package:homeapp/core/utils/translator.dart';
 import 'package:household/household.dart';
@@ -172,7 +174,25 @@ class AppFailure<T> extends Equatable {
 
   static const AppFailure<AuthFieldWithIssue> mockForAuth =
       AppFailure<AuthFieldWithIssue>(code: 'mock', message: '');
+  static const AppFailure mockForDynamic =
+      AppFailure(code: 'mock', message: '');
 
   @override
   List<Object?> get props => [code, fieldWithIssue];
+
+  static AppFailure fromTaskValidationFailure(
+      ValidationFailure validationFailure, Translator translator) {
+    final errors = {
+      HomeIdEmptyValidationFailure: AppFailure(
+          code: validationFailure.code,
+          message: translator.homeIdEmptyValidationError),
+      HomeNameEmptyValidationFailure: AppFailure(
+          code: validationFailure.code,
+          message: translator.homeNameEmptyValidationError)
+    };
+    return errors[validationFailure.runtimeType] ?? unknown(translator);
+  }
+
+  static AppFailure<G> unknown<G>(Translator translator) =>
+      AppFailure<G>(code: 'unknown', message: translator.thereWasAnError);
 }
