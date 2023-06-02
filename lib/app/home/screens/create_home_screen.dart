@@ -105,7 +105,7 @@ class _CreateHomeScreen extends StatelessWidget {
                   Column(
                     children: [
                       LongButton(
-                        label: "Create",
+                        label: context.translator.create,
                         isLoading: state.isLoading,
                         error: state.failure?.message,
                         onPressed: () => context
@@ -118,7 +118,7 @@ class _CreateHomeScreen extends StatelessWidget {
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child: const Text("Cancel")),
+                          child:  Text(context.translator.cancel)),
                     ],
                   ),
                 ]),

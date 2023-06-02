@@ -41,14 +41,15 @@ class ShoppingListView extends StatelessWidget {
           }
 
           if (state.shoppingList.isEmpty) {
-            return const Center(
-              child: Text("No shopping List"),
+            return Center(
+              child: Text(context.translator.noShoppingList),
             );
           }
 
           if (state.status == TasksStatus.error) {
             return Center(
-              child: Text(state.error?.message ?? "Something went wrong",
+              child: Text(
+                  state.error?.message ?? context.translator.somethingWentWrong,
                   style: theme.informationTextStyle.copyWith(color: theme.bad)),
             );
           }
@@ -87,10 +88,12 @@ class ShoppingListView extends StatelessWidget {
                         .toggleTask(entity, context.translator);
                     Navigator.pop(modalContext);
                   },
-                  title: Text(entity.isCompleted ? "Uncomplete" : "Complete"),
+                  title: Text(entity.isCompleted
+                      ? context.translator.markUncomplete
+                      : context.translator.markComplete),
                   leading: const Icon(Icons.done)),
               ListTile(
-                title: const Text("Edit", style: TextStyle()),
+                title: Text(context.translator.edit),
                 leading: const Icon(Icons.edit),
                 onTap: () {
                   Navigator.pop(modalContext);
@@ -103,8 +106,8 @@ class ShoppingListView extends StatelessWidget {
                       .deleteTask(entity, context.translator);
                   Navigator.pop(modalContext);
                 },
-                title:
-                    const Text("Delete", style: TextStyle(color: Colors.red)),
+                title: Text(context.translator.delete,
+                    style: TextStyle(color: Colors.red)),
                 leading: const Icon(Icons.delete, color: Colors.red),
               ),
             ],

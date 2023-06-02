@@ -46,14 +46,14 @@ class TaskCreationChildScreen extends StatelessWidget {
   const TaskCreationChildScreen(
       {super.key, required this.type, required this.home});
 
-  String indicatorBasedOnPosition(double position) {
+  String indicatorBasedOnPosition(double position, BuildContext context) {
     if (position < 0.4) {
-      return "Unimportant";
+      return context.translator.unimportant;
     }
     if (position < 0.6) {
-      return "Quite important";
+      return context.translator.quiteImportant;
     }
-    return "Very important";
+    return context.translator.veryImportant;
   }
 
   Color indicatorColorBasedOnPosition(double position) {
@@ -76,20 +76,19 @@ class TaskCreationChildScreen extends StatelessWidget {
       builder: (context, state) {
         return Padding(
           padding: theme.standardPadding,
-
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextInputField(
                   onChanged: context.read<TaskCreationCubit>().titleChanged,
-                  hint: "Title",
+                  hint: context.translator.title,
                   leading: Icons.home,
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Importance:",
+                      context.translator.importance,
                       style: theme.subtitleTextStyle,
                     ),
                     SliderTheme(
@@ -110,7 +109,8 @@ class TaskCreationChildScreen extends StatelessWidget {
                           valueIndicatorTextStyle:
                               const TextStyle(fontSize: 18)),
                       child: Slider(
-                          label: indicatorBasedOnPosition(state.importance),
+                          label: indicatorBasedOnPosition(
+                              state.importance, context),
                           min: 0,
                           max: 1,
                           value: state.importance,
@@ -129,7 +129,7 @@ class TaskCreationChildScreen extends StatelessWidget {
                 ),
                 LongButton(
                   error: state.failure?.message,
-                  label: "Create",
+                  label: context.translator.create,
                   onPressed: () async {
                     final userState = context.read<AuthBloc>().state;
                     await context.read<TaskCreationCubit>().createTask(

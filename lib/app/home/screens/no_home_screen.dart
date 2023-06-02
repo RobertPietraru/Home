@@ -4,6 +4,7 @@ import 'package:homeapp/app/home/blocs/cubit/homes_cubit.dart';
 import 'package:homeapp/core/components/buttons/long_button.dart';
 import 'package:homeapp/core/components/custom_app_bar.dart';
 import 'package:homeapp/core/components/theme/app_theme.dart';
+import 'package:homeapp/core/utils/translator.dart';
 
 import '../../../core/blocs/auth_bloc/auth_bloc.dart';
 import '../../../injection.dart';
@@ -35,9 +36,9 @@ class NoHomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const SizedBox(),
-              const Center(
+               Center(
                 child: Text(
-                  "You don't have a home yet. Join or create one to get started!",
+                  context.translator.youDontHaveAHome ,
                   style: TextStyle(
                     fontStyle: FontStyle.normal,
                     fontWeight: FontWeight.w400,
@@ -60,7 +61,7 @@ class NoHomeScreen extends StatelessWidget {
                             ),
                           ));
                     },
-                    label: 'Create',
+                    label: context.translator.create,
                     isLoading: false,
                     color: theme.companyColor,
                   ),
@@ -79,8 +80,8 @@ class NoHomeScreen extends StatelessWidget {
                           },
                         );
                       },
-                      child: const Text(
-                        "Join",
+                      child:  Text(
+                        context.translator.join,
                         style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 16.0,

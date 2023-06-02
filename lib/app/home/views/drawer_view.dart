@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homeapp/core/components/app_logo.dart';
 import 'package:homeapp/core/components/theme/app_theme.dart';
+import 'package:homeapp/core/utils/translator.dart';
 import 'package:household/household.dart';
 
 import '../../../core/blocs/auth_bloc/auth_bloc.dart';
@@ -43,9 +44,8 @@ class DrawerView extends StatelessWidget {
                       Icons.person_add,
                       color: Colors.black,
                     ),
-                    title: const Text(
-                      "Invite people",
-                      style: TextStyle(),
+                    title: Text(
+                      context.translator.invitePeople,
                     ),
                   ),
                 ],
@@ -58,8 +58,8 @@ class DrawerView extends StatelessWidget {
                   Icons.delete,
                   color: Colors.red,
                 ),
-                title: const Text(
-                  "Log out",
+                title: Text(
+                  context.translator.logOut,
                   style: TextStyle(color: Colors.red),
                 ),
               ),

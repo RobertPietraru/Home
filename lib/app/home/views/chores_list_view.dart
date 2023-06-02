@@ -48,13 +48,14 @@ class _ChoresListViewState extends State<ChoresListView> {
           }
           if (state.status == TasksStatus.error) {
             return Center(
-              child: Text(state.error?.message ?? "Something went wrong",
+              child: Text(
+                  state.error?.message ?? context.translator.somethingWentWrong,
                   style: theme.informationTextStyle.copyWith(color: theme.bad)),
             );
           }
           if (state.chores.isEmpty) {
-            return const Center(
-              child: Text("No chores"),
+            return Center(
+              child: Text(context.translator.noChores),
             );
           }
           return ListView.separated(
@@ -86,11 +87,12 @@ class _ChoresListViewState extends State<ChoresListView> {
                                   Navigator.pop(modalContext);
                                 },
                                 title: Text(entity.isCompleted
-                                    ? "Uncomplete"
-                                    : "Complete"),
+                                    ? context.translator.markUncomplete
+                                    : context.translator.markComplete),
                                 leading: const Icon(Icons.done)),
                             ListTile(
-                              title: const Text("Edit", style: TextStyle()),
+                              title: Text(context.translator.edit,
+                                  style: TextStyle()),
                               leading: const Icon(Icons.edit),
                               onTap: () {
                                 Navigator.pop(modalContext);
@@ -103,7 +105,7 @@ class _ChoresListViewState extends State<ChoresListView> {
                                     .deleteTask(entity, context.translator);
                                 Navigator.pop(modalContext);
                               },
-                              title: const Text("Delete",
+                              title:  Text(context.translator.delete,
                                   style: TextStyle(color: Colors.red)),
                               leading:
                                   const Icon(Icons.delete, color: Colors.red),

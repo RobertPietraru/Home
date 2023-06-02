@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:homeapp/core/components/custom_app_bar.dart';
 import 'package:homeapp/core/components/theme/app_theme.dart';
+import 'package:homeapp/core/utils/translator.dart';
 import 'package:household/household.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -23,14 +24,14 @@ class InviteToHomeScreen extends StatelessWidget {
           children: [
             const SizedBox(),
             Text(
-              "“Home is where your loved ones are.” \n- My mom",
-              style: theme.actionTextStyle,
+              context.translator.homeIsWhere,
+              style: theme.subtitleTextStyle,
               textAlign: TextAlign.end,
             ),
             Column(
               children: [
                 LongButton(
-                  label: "Invite your family",
+                  label: context.translator.inviteYourFamily,
                   onPressed: () async {
                     Share.share(homeEntity.id);
                     Navigator.pop(context);
@@ -41,7 +42,7 @@ class InviteToHomeScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: const Text("Later")),
+                    child: Text(context.translator.later)),
               ],
             )
           ],

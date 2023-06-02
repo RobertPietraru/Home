@@ -44,13 +44,13 @@ class JoinHomeView extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  "Join Home",
+                  context.translator.joinHome,
                   style: theme.titleTextStyle,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 10),
                 TextInputField(
-                  hint: "Home id",
+                  hint: context.translator.homeId,
                   leading: Icons.home,
                   error: state.homeIdFailure,
                   onChanged: (newId) {
@@ -59,7 +59,7 @@ class JoinHomeView extends StatelessWidget {
                 ),
                 const SizedBox(height: 30),
                 LongButton(
-                  label: "Join",
+                  label: context.translator.join,
                   onPressed: () async {
                     final userState = context.read<AuthBloc>().state;
                     await context
