@@ -80,5 +80,22 @@
   "leave": "Leave",
   "needQuestionToGenerate": "You need to write a question before generating",
   
-  "wrongPassword": "The password is wrong"
+  "disabledUserError": "The user is diabled",
+  "emailAlreadyExistsError": "The email you provided already exists",
+  "invalidEmailError": "The email you provided is invalid",
+  "wrongAuthenticationMethodError": "Your account uses a different authentication method",
+  "invalidCredentialsError": "The credentials you provided are invalid",
+  "invalidVerificationCodeError": "The verification code you provided is invalid",
+  "missingAuthenticationError": "You are not authenticated",
+  "missingPermissionError": "You do not have permission to perform that action",
+  "networkError": "You are not connected to internet, or the connection is faulty",
+  "userNotFoundError": "The user was not found",
+  "invalidPasswordError": "The password you provided is invalid",
+  "weakPasswordError": "The password you provided is weak",
+  "wrongPasswordError": "The password you provided is wrong",
+  "confirmPasswordEmptyValidationError": "You have to confirm the password",
+  "confirmPasswordMatchError": "Passwords don't match",
+  "emailEmptyValidationError": "You have to provide an email",
+  "passwordEmptyValidationError": "You need to provide a password"
 }
+

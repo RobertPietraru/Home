@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter/services.dart';
 import 'package:homeapp/core/components/components.dart';
-import 'package:homeapp/core/language_cubit/language_cubit.dart';
 import 'package:homeapp/core/utils/translator.dart';
 
-import '../../app/auth/auth_bloc/auth_bloc.dart';
+import '../blocs/auth_bloc/auth_bloc.dart';
+import '../blocs/language_cubit/language_cubit.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showLeading;
@@ -16,7 +16,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final PreferredSizeWidget? bottom;
   final Color fillColor;
   final Color? mainColor;
-  final bool showPlay;
   const CustomAppBar({
     Key? key,
     this.showLeading = true,
@@ -26,7 +25,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.bottom,
     this.fillColor = Colors.transparent,
     this.mainColor,
-    this.showPlay = true,
   }) : super(key: key);
 
   AppBar theAppBar({
@@ -38,8 +36,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       systemOverlayStyle: SystemUiOverlayStyle.light,
       elevation: fillColor == Colors.transparent ? 0 : null,
       foregroundColor: mainColor ?? theme.primaryColor,
-      automaticallyImplyLeading: showLeading && leading == null,
-      leading: leading,
+      automaticallyImplyLeading: true,
       title: title ??
           Row(
             mainAxisSize: MainAxisSize.min,
@@ -47,7 +44,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               AppLogo(color: mainColor ?? theme.primaryColor),
               const SizedBox(width: 10),
               Text(
-                "home",
+                "Pietrocka Home",
                 style: TextStyle(
                   color: mainColor ?? theme.primaryColor,
                   fontWeight: FontWeight.bold,
@@ -58,11 +55,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: fillColor,
       actions: trailing ??
           [
-            if (showPlay)
-              TextButton(
-                  onPressed: () {},
-                  child: Text(context.translator.play,
-                      style: theme.actionTextStyle)),
             BlocBuilder<LanguageCubit, LanguageState>(
               builder: (context, state) {
                 return LanguagePicker(

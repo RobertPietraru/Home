@@ -6,8 +6,7 @@ import 'package:homeapp/core/components/text_input_field.dart';
 import 'package:homeapp/core/components/theme/app_theme.dart';
 import 'package:homeapp/core/utils/translator.dart';
 import 'package:homeapp/injection.dart';
-import '../auth_bloc/auth_bloc.dart';
-import '../registration/registration_screen.dart';
+import '../../../core/blocs/auth_bloc/auth_bloc.dart';
 import 'cubit/login_cubit.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -17,7 +16,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          LoginCubit(locator(), locator(), authBloc: context.read<AuthBloc>()),
+          LoginCubit(locator(), authBloc: context.read<AuthBloc>()),
       child: Scaffold(
         appBar: const CustomAppBar(),
         body: _LoginBlocWrapper(child: _LoginView()),
@@ -31,7 +30,7 @@ class _LoginView extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = AppTheme.of(context);
     return Padding(
-      padding: theme.standardPadding,
+      padding: theme.standardPadding.copyWith(bottom: theme.spacing.xxLarge),
       child: BlocConsumer<LoginCubit, LoginState>(
         listener: (context, state) {
           if (state.isSuccessful) {
@@ -40,71 +39,67 @@ class _LoginView extends StatelessWidget {
         },
         builder: (context, state) {
           return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(context.translator.login, style: theme.titleTextStyle),
-                SizedBox(height: theme.spacing.mediumLarge),
+                Text(context.translator.login,
+                    style: theme.largetitleTextStyle),
                 Text(
-                  context.translator.completeToContinue,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16,
-                    color: theme.primaryColor,
-                  ),
+                  context.translator.fillInToContinue,
+                  style: theme.informationTextStyle,
                   textAlign: TextAlign.left,
                 ),
-                SizedBox(height: theme.spacing.xxLarge),
-                TextInputField(
-                  onChanged: context.read<LoginCubit>().onEmailChanged,
-                  hint: context.translator.email,
-                  error: state.emailFailure(context),
+                Column(
+                  children: [
+                    TextInputField(
+                      onChanged: context.read<LoginCubit>().onEmailChanged,
+                      hint: context.translator.email,
+                      error: state.emailFailure(context),
+                    ),
+                    SizedBox(height: theme.spacing.medium),
+                    TextInputField(
+                      onChanged: context.read<LoginCubit>().onPasswordChanged,
+                      hint: context.translator.password,
+                      isPassword: true,
+                      error: state.passwordFailure(context),
+                    ),
+                  ],
                 ),
-                SizedBox(height: theme.spacing.mediumLarge),
-                TextInputField(
-                  onChanged: context.read<LoginCubit>().onPasswordChanged,
-                  hint: context.translator.password,
-                  isPassword: true,
-                  error: state.passwordFailure(context),
-                ),
-                SizedBox(height: theme.spacing.mediumLarge),
-                Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                  TextButton(
-                      onPressed: null,
-                      child: Text(context.translator.forgotYourPassword))
-                ]),
-                SizedBox(height: theme.spacing.mediumLarge),
-                LongButton(
-                    onPressed: () => context.read<LoginCubit>().login(),
-                    label: context.translator.login,
-                    error:
-                        state.failure?.fieldWithIssue == AuthFieldWithIssue.none
+                SizedBox(height: theme.spacing.xxxLarge),
+                Column(
+                  children: [
+                    LongButton(
+                        onPressed: () =>
+                            context.read<LoginCubit>().login(context),
+                        label: context.translator.login,
+                        color: theme.companyColor,
+                        error: state.failure?.fieldWithIssue ==
+                                AuthFieldWithIssue.none
                             ? state.failure?.message
                             : null,
-                    isLoading: state.isLoading),
-                SizedBox(height: theme.spacing.xxLarge),
-                Center(
-                  child: TextButton(
-                      onPressed: () => Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const RegistrationScreen())),
-                      child: RichText(
-                        text: TextSpan(children: [
-                          TextSpan(
-                            text: context.translator.dontHaveAnAccount,
-                            style: theme.actionTextStyle
-                                .copyWith(color: theme.primaryColor),
-                          ),
-                          TextSpan(
-                              text: ' ${context.translator.register}',
-                              style: theme.actionTextStyle.copyWith(
-                                color: theme.companyColor,
-                              )),
-                        ]),
-                      )),
-                )
+                        isLoading: state.isLoading),
+                    Center(
+                      child: TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: RichText(
+                            text: TextSpan(children: [
+                              TextSpan(
+                                text: context.translator.dontHaveAnAccount,
+                                style: theme.actionTextStyle
+                                    .copyWith(color: theme.primaryColor),
+                              ),
+                              TextSpan(
+                                  text: ' ${context.translator.register}',
+                                  style: theme.actionTextStyle.copyWith(
+                                    color: theme.companyColor,
+                                  )),
+                            ]),
+                          )),
+                    ),
+                  ],
+                ),
               ]);
         },
       ),
@@ -120,7 +115,7 @@ class _LoginBlocWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          LoginCubit(locator(), locator(), authBloc: context.read<AuthBloc>()),
+          LoginCubit(locator(), authBloc: context.read<AuthBloc>()),
       child: child,
     );
   }

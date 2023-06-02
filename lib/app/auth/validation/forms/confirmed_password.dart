@@ -17,6 +17,11 @@ class ConfirmedPassword extends FormzInput<String, ValidationFailure> {
     if ((value ?? '').isEmpty) {
       return const AuthConfirmPasswordEmptyValidationFailure();
     }
-    return password == value ? null : const AuthConfirmPasswordMatchFailure();
+
+    if (password == value) {
+      return null;
+    }
+    print(password == value);
+    return const AuthConfirmPasswordMatchFailure();
   }
 }

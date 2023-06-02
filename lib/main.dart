@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:homeapp/core/language_cubit/language_cubit.dart';
+import 'package:homeapp/app/auth/registration/registration_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../core/components/theme/app_theme.dart';
 import '../core/components/theme/app_theme_data.dart';
 import '../injection.dart';
-import 'app/auth/auth_bloc/auth_bloc.dart';
+import 'core/blocs/auth_bloc/auth_bloc.dart';
+import 'core/blocs/language_cubit/language_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,8 +15,8 @@ void main() async {
   await Hive.initFlutter();
   await initialize();
 
-  runApp(
-      BlocProvider(create: (context) => AuthBloc(locator()), child: const MyApp()));
+  runApp(BlocProvider(
+      create: (context) => AuthBloc(locator()), child: const MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -46,16 +47,34 @@ class _MyAppState extends State<MyApp> {
                   child: Builder(builder: (context) {
                     return MaterialApp(
                       home: () {
-                        state is AuthAuthenticatedState;
                         switch (state.runtimeType) {
                           case AuthAuthenticatedState:
-                            return const Scaffold(
-                                body: Center(child: Text('Logged in')));
+                            return Scaffold(
+                                body: Center(
+                                    child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text('Logged in'),
+                                TextButton(
+                                  onPressed: () {
+                                    context
+                                        .read<AuthBloc>()
+                                        .add(const AuthUserLoggedOut());
+                                  },
+                                  child: Text("Logout"),
+                                ),
+                                Text('asdf')
+                              ],
+                            )));
+                          case AuthUnauthenticatedState:
+                            return RegistrationScreen();
                           case AuthFailureState:
                             return const Text('aasdf');
                           default:
                             return const Scaffold(
-                                body: Center(child: Text('Logged in')));
+                                body: Center(
+                              child: CircularProgressIndicator(),
+                            ));
                         }
                       }(),
                       theme: _lightTheme.materialThemeData(context),

@@ -6,8 +6,8 @@ import 'package:homeapp/app/auth/validation/forms/confirmed_password.dart';
 import 'package:homeapp/core/classes/validation_failure.dart';
 import 'package:homeapp/core/utils/translator.dart';
 
+import '../../../../core/blocs/auth_bloc/auth_bloc.dart';
 import '../../../../core/classes/app_failure.dart';
-import '../../auth_bloc/auth_bloc.dart';
 import '../../validation/forms/email.dart';
 import '../../validation/forms/password.dart';
 
@@ -16,11 +16,11 @@ part 'registration_state.dart';
 class RegistrationCubit extends Cubit<RegistrationState> {
   final AuthRepository authRepository;
   final AuthBloc authBloc;
-  final Translator translator;
 
-  RegistrationCubit(this.authRepository, this.translator,
-      {required this.authBloc})
-      : super(const RegistrationState(
+  RegistrationCubit(
+    this.authRepository, {
+    required this.authBloc,
+  }) : super(const RegistrationState(
           status: RegistrationStatus.init,
           confirmedPassword: ConfirmedPassword.dirty(password: ''),
           email: Email.dirty(),
@@ -55,11 +55,15 @@ class RegistrationCubit extends Cubit<RegistrationState> {
     ));
   }
 
-  Future<void> register() async {
+  Future<void> register(BuildContext context) async {
     if (state.validationFailure != null) {
-      emit(state.copyWith(status: RegistrationStatus.error));
+      emit(state.copyWith(
+          status: RegistrationStatus.error,
+          failure: AppFailure.fromAuthValidationFailure(
+              state.validationFailure!, context.translator)));
       return;
     }
+
     emit(state.copyWith(status: RegistrationStatus.loading));
     final response = await authRepository.registerUser(
       RegisterParams(
@@ -71,7 +75,7 @@ class RegistrationCubit extends Cubit<RegistrationState> {
     return response.fold((failure) {
       emit(state.copyWith(
         status: RegistrationStatus.error,
-        failure: AppFailure.fromAuthFailure(failure, translator),
+        failure: AppFailure.fromAuthFailure(failure, context.translator),
       ));
     }, (user) {
       emit(state.copyWith(

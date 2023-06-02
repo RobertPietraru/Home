@@ -31,7 +31,7 @@ abstract class AppThemeData {
   Color get defaultBackgroundColor;
   Color get primaryColor;
   Color get secondaryColor;
-  Color get companyColor => Colors.red;
+  Color get companyColor => Colors.green;
 
   Color get bad => Colors.red;
   Color get good => Colors.green;

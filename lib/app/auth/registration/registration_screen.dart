@@ -5,11 +5,10 @@ import 'package:homeapp/core/components/theme/device_size.dart';
 import 'package:homeapp/core/utils/translator.dart';
 import 'package:homeapp/injection.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../../../core/components/buttons/long_button.dart';
 import '../../../../../core/components/text_input_field.dart';
 import '../../../../../core/components/theme/app_theme.dart';
-import '../auth_bloc/auth_bloc.dart';
+import '../../../core/blocs/auth_bloc/auth_bloc.dart';
 import '../login/login_screen.dart';
 import 'cubit/registration_cubit.dart';
 
@@ -19,8 +18,10 @@ class RegistrationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => RegistrationCubit(locator(), locator(),
-          authBloc: context.read<AuthBloc>()),
+      create: (context) => RegistrationCubit(
+        locator(),
+        authBloc: context.read<AuthBloc>(),
+      ),
       child: _RegistrationScreen(),
     );
   }
@@ -29,104 +30,105 @@ class RegistrationScreen extends StatelessWidget {
 class _RegistrationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final translator = AppLocalizations.of(context);
     return Scaffold(
       appBar: const CustomAppBar(),
-      body: BlocConsumer<RegistrationCubit, RegistrationState>(
-        listener: (context, state) {
-          if (state.isSuccessful) {
-            Navigator.popUntil(context, (route) => route.isFirst);
-          }
-        },
-        builder: (context, state) {
-          final theme = AppTheme.of(context);
-          return Center(
-            child: SizedBox(
-              width: DeviceSize.isDesktopMode ? 50.widthPercent : null,
-              child: Padding(
-                padding: theme.standardPadding.copyWith(bottom: 0),
-                child: SingleChildScrollView(
+      body: Builder(builder: (context) {
+        return BlocConsumer<RegistrationCubit, RegistrationState>(
+          listener: (context, state) {
+            if (state.isSuccessful) {
+              Navigator.popUntil(context, (route) => route.isFirst);
+            }
+          },
+          builder: (context, state) {
+            final theme = AppTheme.of(context);
+            return Center(
+              child: SizedBox(
+                width: DeviceSize.isDesktopMode ? 50.widthPercent : null,
+                child: Padding(
+                  padding: theme.standardPadding
+                      .copyWith(bottom: theme.spacing.xxLarge),
                   child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(context.translator.register,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 40,
-                                color: theme.primaryColor),
+                            style: theme.largetitleTextStyle,
                             textAlign: TextAlign.left),
-                        SizedBox(height: theme.spacing.mediumLarge),
                         Text(
                           context.translator.fillInToContinue,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16,
-                              color: theme.primaryColor),
+                          style: theme.informationTextStyle,
                           textAlign: TextAlign.left,
                         ),
-                        SizedBox(height: theme.spacing.xxLarge),
-                        TextInputField(
-                          onChanged:
-                              context.read<RegistrationCubit>().onEmailChanged,
-                          hint: context.translator.email,
-                          error: state.emailFailure(context),
+                        Column(
+                          children: [
+                            TextInputField(
+                              onChanged: context
+                                  .read<RegistrationCubit>()
+                                  .onEmailChanged,
+                              hint: context.translator.email,
+                              error: state.emailFailure(context),
+                            ),
+                            SizedBox(height: theme.spacing.medium),
+                            TextInputField(
+                              onChanged: context
+                                  .read<RegistrationCubit>()
+                                  .onPasswordChanged,
+                              hint: context.translator.password,
+                              isPassword: true,
+                              error: state.passwordFailure(context),
+                            ),
+                            SizedBox(height: theme.spacing.medium),
+                            TextInputField(
+                              isPassword: true,
+                              onChanged: context
+                                  .read<RegistrationCubit>()
+                                  .onConfirmedPasswordChanged,
+                              hint: context.translator.confirmPassword,
+                              error: state.confirmPasswordFailure(context),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: theme.spacing.mediumLarge),
-                        TextInputField(
-                          onChanged: context
-                              .read<RegistrationCubit>()
-                              .onPasswordChanged,
-                          hint: context.translator.password,
-                          isPassword: true,
-                          error: state.passwordFailure(context),
+                        Column(
+                          children: [
+                            LongButton(
+                              onPressed: () => context
+                                  .read<RegistrationCubit>()
+                                  .register(context),
+                              label: context.translator.register,
+                              color: theme.companyColor,
+                              isLoading: state.isLoading,
+                            ),
+                            Center(
+                              child: TextButton(
+                                  onPressed: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const LoginScreen())),
+                                  child: RichText(
+                                    text: TextSpan(children: [
+                                      TextSpan(
+                                        text: context
+                                            .translator.alreadyHaveAnAccount,
+                                        style: theme.actionTextStyle.copyWith(
+                                            color: theme.primaryColor),
+                                      ),
+                                      TextSpan(
+                                          text: ' ${context.translator.login}',
+                                          style: theme.actionTextStyle.copyWith(
+                                              color: theme.companyColor)),
+                                    ]),
+                                  )),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: theme.spacing.mediumLarge),
-                        TextInputField(
-                          isPassword: true,
-                          onChanged: context
-                              .read<RegistrationCubit>()
-                              .onConfirmedPasswordChanged,
-                          hint: context.translator.confirmPassword,
-                          error: state.confirmPasswordFailure(context),
-                        ),
-                        SizedBox(height: theme.spacing.xxLarge),
-                        LongButton(
-                          onPressed: () =>
-                              context.read<RegistrationCubit>().register(),
-                          label: context.translator.register,
-                          isLoading: state.isLoading,
-                        ),
-                        SizedBox(height: theme.spacing.xxLarge),
-                        Center(
-                          child: TextButton(
-                              onPressed: () => Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const LoginScreen())),
-                              child: RichText(
-                                text: TextSpan(children: [
-                                  TextSpan(
-                                    text:
-                                        context.translator.alreadyHaveAnAccount,
-                                    style: theme.actionTextStyle
-                                        .copyWith(color: theme.primaryColor),
-                                  ),
-                                  TextSpan(
-                                      text: ' ${translator.login}',
-                                      style: theme.actionTextStyle
-                                          .copyWith(color: theme.companyColor)),
-                                ]),
-                              )),
-                        )
                       ]),
                 ),
               ),
-            ),
-          );
-        },
-      ),
+            );
+          },
+        );
+      }),
     );
   }
 }

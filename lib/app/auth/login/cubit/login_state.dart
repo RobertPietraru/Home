@@ -56,22 +56,12 @@ class LoginState extends Equatable {
     Email? email,
     Password? password,
     LoginStatus? status,
-    AppFailure<AuthFieldWithIssue>? failure =
-        const AppFailure<AuthFieldWithIssue>(
-      code: '',
-      message: '',
-    ),
+    AppFailure<AuthFieldWithIssue>? failure = AppFailure.mockForAuth,
   }) =>
       LoginState(
         email: email ?? this.email,
         password: password ?? this.password,
         status: status ?? this.status,
-        failure: failure ==
-                const AppFailure<AuthFieldWithIssue>(
-                  code: '',
-                  message: '',
-                )
-            ? this.failure
-            : failure,
+        failure: failure == AppFailure.mockForAuth ? this.failure : failure,
       );
 }
