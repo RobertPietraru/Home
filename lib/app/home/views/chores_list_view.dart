@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pietrocka_home/core/presentation/navigation/navigation_cubit.dart';
-import 'package:pietrocka_home/core/presentation/widgets/error/error_alert_widget.dart';
-import 'package:pietrocka_home/features/tasks/presentation/blocs/tasks_cubit/tasks_cubit.dart';
-import 'package:pietrocka_home/features/tasks/presentation/screens/task_creation_screen.dart';
-import 'package:pietrocka_home/features/tasks/presentation/widgets/task_widget.dart';
+import 'package:homeapp/core/components/theme/app_theme.dart';
+import 'package:homeapp/core/utils/translator.dart';
+import 'package:household/household.dart';
 
-import '../../domain/entities/tasks_entities.dart';
+import '../blocs/tasks_cubit/tasks_cubit.dart';
+import '../screens/task_creation_screen.dart';
+import '../widgets/task_widget.dart';
 
 class ChoresListView extends StatefulWidget {
   final HomeEntity home;
@@ -22,15 +22,18 @@ class ChoresListView extends StatefulWidget {
 class _ChoresListViewState extends State<ChoresListView> {
   @override
   Widget build(BuildContext context) {
+    final theme = AppTheme.of(context);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.read<NavigationCubit>().navigateTo(
+          Navigator.push(
               context,
-              BlocProvider.value(
-                value: BlocProvider.of<TasksCubit>(context),
-                child:
-                    TaskCreationScreen(type: TaskType.chore, home: widget.home),
+              MaterialPageRoute(
+                builder: (context) => BlocProvider.value(
+                  value: BlocProvider.of<TasksCubit>(context),
+                  child: TaskCreationScreen(
+                      type: TaskType.chore, home: widget.home),
+                ),
               ));
         },
         child: const Icon(Icons.add),
@@ -44,10 +47,8 @@ class _ChoresListViewState extends State<ChoresListView> {
           }
           if (state.status == TasksStatus.error) {
             return Center(
-              child: ErrorAlertWidget(
-                message: state.error!.message,
-                code: state.error?.code,
-              ),
+              child: Text(state.error?.message ?? "Something went wrong",
+                  style: theme.informationTextStyle.copyWith(color: theme.bad)),
             );
           }
           if (state.chores.isEmpty) {
@@ -64,7 +65,9 @@ class _ChoresListViewState extends State<ChoresListView> {
               final entity = state.chores[index];
               return TaskWidget(
                 entity: entity,
-                onPressed: () => context.read<TasksCubit>().toggleTask(entity),
+                onPressed: () => context
+                    .read<TasksCubit>()
+                    .toggleTask(entity, context.translator),
                 onLongPress: () {
                   showModalBottomSheet(
                     context: context,
@@ -76,7 +79,7 @@ class _ChoresListViewState extends State<ChoresListView> {
                           children: [
                             ListTile(
                                 onTap: () {
-                                  context.read<TasksCubit>().toggleTask(entity);
+                                  context.read<TasksCubit>().toggleTask(entity, context.translator);
                                   Navigator.pop(modalContext);
                                 },
                                 title: Text(entity.isCompleted
@@ -92,7 +95,7 @@ class _ChoresListViewState extends State<ChoresListView> {
                             ),
                             ListTile(
                               onTap: () {
-                                context.read<TasksCubit>().deleteTask(entity);
+                                context.read<TasksCubit>().deleteTask(entity,context.translator);
                                 Navigator.pop(modalContext);
                               },
                               title: const Text("Delete",
