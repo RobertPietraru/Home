@@ -4,20 +4,20 @@ enum TaskCreationStatus { loading, created, error, idle }
 
 class TaskCreationState extends Equatable {
   final TaskTitle body;
-  final AppFailure? error;
+  final AppFailure? failure;
   final TaskCreationStatus status;
   final DateTime? deadline;
   final double importance;
   const TaskCreationState({
     this.body = const TaskTitle.pure(),
-    this.error,
+    this.failure,
     this.status = TaskCreationStatus.idle,
     this.deadline,
     this.importance = 0.5,
   });
 
   @override
-  List<Object?> get props => [body, error, status, deadline, importance];
+  List<Object?> get props => [body, failure, status, deadline, importance];
 
   bool get isLoading {
     return status == TaskCreationStatus.loading;
@@ -26,6 +26,7 @@ class TaskCreationState extends Equatable {
   ValidationFailure? get validationFailure {
     return body.error;
   }
+
 
   TaskCreationState copyWith({
     TaskTitle? body,
@@ -39,7 +40,7 @@ class TaskCreationState extends Equatable {
       status: status ?? this.status,
       importance: importance ?? this.importance,
       deadline: deadline ?? this.deadline,
-      error: failure == AppFailure.mockForDynamic ? this.error : failure,
+      failure: failure == AppFailure.mockForDynamic ? this.failure : failure,
     );
   }
 }

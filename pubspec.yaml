@@ -65,6 +65,7 @@ dependencies:
     path: packages/auth
   household:
     path: packages/household
+  syncfusion_flutter_datepicker: ^21.2.8
 
 dev_dependencies:
   build_runner: ^2.3.3

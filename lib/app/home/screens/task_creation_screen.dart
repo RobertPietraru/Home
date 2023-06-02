@@ -1,19 +1,17 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pietrocka_home/core/global/styles.dart';
-import 'package:pietrocka_home/core/presentation/navigation/navigation_cubit.dart';
-import 'package:pietrocka_home/core/presentation/widgets/buttons/long_button.dart';
-import 'package:pietrocka_home/core/presentation/widgets/inputfields/text_input_field.dart';
-import 'package:pietrocka_home/core/presentation/widgets/pietrocka_appbar.dart';
-import 'package:pietrocka_home/features/auth/presentation/auth_bloc/auth_bloc.dart';
-import 'package:pietrocka_home/features/tasks/domain/entities/home_entity.dart';
-import 'package:pietrocka_home/features/tasks/domain/entities/task_entity.dart';
-import 'package:pietrocka_home/features/tasks/presentation/blocs/tasks_cubit/tasks_cubit.dart';
-import 'package:pietrocka_home/features/tasks/presentation/blocs/task_creation_cubit/task_creation_cubit.dart';
-import 'package:pietrocka_home/core/config/injection.dart';
+import 'package:homeapp/core/components/theme/app_theme.dart';
+import 'package:homeapp/core/utils/translator.dart';
+import 'package:household/household.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+
+import '../../../core/blocs/auth_bloc/auth_bloc.dart';
+import '../../../core/components/buttons/long_button.dart';
+import '../../../core/components/custom_app_bar.dart';
+import '../../../core/components/text_input_field.dart';
+import '../../../injection.dart';
+import '../blocs/task_creation_cubit/task_creation_cubit.dart';
+import '../blocs/tasks_cubit/tasks_cubit.dart';
 
 class TaskCreationScreen extends StatelessWidget {
   final TaskType type;
@@ -23,10 +21,11 @@ class TaskCreationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PietrockaAppBar(
-          trailing: Icon(type == TaskType.chore
-              ? Icons.cleaning_services
-              : Icons.shopping_bag)),
+      appBar: CustomAppBar(trailing: [
+        Icon(type == TaskType.chore
+            ? Icons.cleaning_services
+            : Icons.shopping_bag)
+      ]),
       body: BlocProvider(
         create: (context) => TaskCreationCubit(
           locator(),
@@ -69,7 +68,11 @@ class TaskCreationChildScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TaskCreationCubit, TaskCreationState>(
+    final theme = AppTheme.of(context);
+    return BlocConsumer<TaskCreationCubit, TaskCreationState>(
+      listener: (context, state) {
+        if (state.status == TaskCreationStatus.created) Navigator.pop(context);
+      },
       builder: (context, state) {
         return Padding(
           padding: const EdgeInsets.all(8.0),
@@ -79,15 +82,14 @@ class TaskCreationChildScreen extends StatelessWidget {
                 TextInputField(
                   onChanged: context.read<TaskCreationCubit>().titleChanged,
                   hint: "Title",
-                  prefixIcon: Icons.home,
-                  error: state.homebodyErrorMessage,
+                  leading: Icons.home,
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       "Importance:",
-                      style: Styles.titleStyle1,
+                      style: theme.subtitleTextStyle,
                     ),
                     SliderTheme(
                       data: SliderThemeData(
@@ -120,38 +122,23 @@ class TaskCreationChildScreen extends StatelessWidget {
                   ],
                 ),
                 SfDateRangePicker(
-                  onSelectionChanged: (fuck) {
-                    context
-                        .read<TaskCreationCubit>()
-                        .deadlineChanged(fuck.value as DateTime);
-                  },
+                  onSelectionChanged: (s) => context
+                      .read<TaskCreationCubit>()
+                      .deadlineChanged(s.value as DateTime),
                 ),
                 LongButton(
-                    text: "Create",
-                    onPressed: context.read<AuthBloc>().state.isAuthenticated
-                        ? () async {
-                            final userState = context.read<AuthBloc>().state;
-                            String? error;
-
-                            final itWorked = await context
-                                .read<TaskCreationCubit>()
-                                .createTask(
-                                    homeId: home.id,
-                                    userId: userState.userId!,
-                                    type: type);
-                            error = itWorked ? null : state.error?.message;
-                            if (itWorked) {
-                              context.read<NavigationCubit>().pop(context);
-                              return;
-                            }
-
-                            if (error != null) {
-                              context
-                                  .read<NavigationCubit>()
-                                  .showSnackbarErrorWithMessage(error, context);
-                            }
-                          }
-                        : null),
+                  error: state.failure?.message,
+                  label: "Create",
+                  onPressed: () async {
+                    final userState = context.read<AuthBloc>().state;
+                    await context.read<TaskCreationCubit>().createTask(
+                        homeId: home.id,
+                        userId: userState.userEntity!.id,
+                        type: type,
+                        translator: context.translator);
+                  },
+                  isLoading: state.isLoading,
+                ),
                 const SizedBox()
               ]),
         );
