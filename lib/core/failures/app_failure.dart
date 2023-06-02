@@ -2,6 +2,7 @@ import 'package:auth/auth.dart';
 import 'package:equatable/equatable.dart';
 import 'package:homeapp/core/failures/validation_failure.dart';
 import 'package:homeapp/core/utils/translator.dart';
+import 'package:household/household.dart';
 
 import '../../app/auth/validation/errors/confirm_password_validation_failures.dart';
 import '../../app/auth/validation/errors/email_validation_failures.dart';
@@ -123,6 +124,49 @@ class AppFailure<T> extends Equatable {
           code: failure.code,
           message: translator.thereWasAnError,
           fieldWithIssue: AuthFieldWithIssue.other,
+        );
+  }
+
+  static AppFailure fromTaskFailure(
+      TaskFailure failure, Translator translator) {
+    final x = {
+      UnknownTaskFailure: AppFailure(
+          code: failure.code,
+          message: translator.thereWasAnError,
+          fieldWithIssue: null),
+      TaskNotFoundTaskFailure: AppFailure(
+          code: failure.code,
+          message: translator.taskNotFoundTaskError,
+          fieldWithIssue: null),
+      MissingPermissionsTaskFailure: AppFailure(
+          code: failure.code,
+          message: translator.missingPermissionError,
+          fieldWithIssue: null),
+      MissingAuthenticationTaskFailure: AppFailure(
+          code: failure.code,
+          message: translator.missingAuthenticationError,
+          fieldWithIssue: null),
+      InvalidInputTaskFailure: AppFailure(
+          code: failure.code,
+          message: translator.invalidInputTaskError,
+          fieldWithIssue: null),
+      InternalTaskFailure: AppFailure(
+          code: failure.code,
+          message: translator.internalTaskError,
+          fieldWithIssue: null),
+      HomeNotFoundTaskFailure: AppFailure(
+          code: failure.code,
+          message: translator.homeNotFoundTaskError,
+          fieldWithIssue: null),
+      AbortedTaskFailure: AppFailure(
+          code: failure.code,
+          message: translator.abortedTaskError,
+          fieldWithIssue: null),
+    };
+    return x[failure.runtimeType] ??
+        AppFailure(
+          code: failure.code,
+          message: translator.thereWasAnError,
         );
   }
 

@@ -63,6 +63,8 @@ dependencies:
   flutter_dotenv: ^5.0.2
   auth:
     path: packages/auth
+  household:
+    path: packages/household
 
 dev_dependencies:
   build_runner: ^2.3.3
