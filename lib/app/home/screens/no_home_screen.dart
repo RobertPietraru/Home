@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pietrocka_home/core/presentation/widgets/pietrocka_logo.dart';
-import 'package:pietrocka_home/features/auth/presentation/auth_bloc/auth_bloc.dart';
-import 'package:pietrocka_home/features/tasks/presentation/blocs/homes_bloc/homes_bloc.dart';
-import 'package:pietrocka_home/features/tasks/presentation/blocs/join_home/join_home_cubit.dart';
-import 'package:pietrocka_home/features/tasks/presentation/screens/create_home_screen.dart';
-import 'package:pietrocka_home/features/tasks/presentation/views/join_home_view.dart';
-import 'package:pietrocka_home/core/config/injection.dart';
+import 'package:homeapp/app/home/blocs/cubit/homes_cubit.dart';
+import 'package:homeapp/app/home/blocs/tasks_cubit/tasks_cubit.dart';
+import 'package:homeapp/core/components/custom_app_bar.dart';
 
-import '../../../../core/presentation/navigation/navigation_cubit.dart';
+import '../../../core/blocs/auth_bloc/auth_bloc.dart';
+import '../../../injection.dart';
+import '../blocs/join_home/join_home_cubit.dart';
+import '../views/join_home_view.dart';
+import 'create_home_screen.dart';
 
 class NoHomeScreen extends StatelessWidget {
   const NoHomeScreen({super.key});
@@ -16,20 +16,16 @@ class NoHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: CustomAppBar(
         leading: IconButton(
           onPressed: () {
-            context.read<AuthBloc>().add(AuthLoggedOut());
+            context.read<AuthBloc>().add(const AuthUserLoggedOut());
           },
           icon: const Icon(
             Icons.logout,
             color: Colors.black,
           ),
         ),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const PietrockaLogo(),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -64,9 +60,14 @@ class NoHomeScreen extends StatelessWidget {
                           backgroundColor: MaterialStateProperty.all(
                               const Color(0xFF38963E))),
                       onPressed: () {
-                        context
-                            .read<NavigationCubit>()
-                            .navigateTo(context, CreateHomeScreen());
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BlocProvider.value(
+                                value: BlocProvider.of<TasksCubit>(context),
+                                child: CreateHomeScreen(),
+                              ),
+                            ));
                       },
                       child: const Text(
                         "Create",
@@ -89,7 +90,7 @@ class NoHomeScreen extends StatelessWidget {
                           builder: (modalContext) {
                             return BlocProvider(
                               create: (context) => JoinHomeCubit(locator(),
-                                  homesBloc: context.read<HomesBloc>()),
+                                  homesCubit: context.read<HomesCubit>()),
                               child: const JoinHomeView(),
                             );
                           },
