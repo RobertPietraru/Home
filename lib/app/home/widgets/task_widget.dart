@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pietrocka_home/features/tasks/domain/entities/task_entity.dart';
+import 'package:household/household.dart';
 
 class TaskWidget extends StatelessWidget {
   final TaskEntity entity;
