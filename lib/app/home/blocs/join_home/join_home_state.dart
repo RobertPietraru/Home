@@ -23,6 +23,8 @@ class JoinHomeState extends Equatable {
     return homeId.error;
   }
 
+  String? get homeIdFailure => error?.message;
+
   JoinHomeState copyWith({
     HomeId? homeId,
     AppFailure? error = AppFailure.mockForDynamic,

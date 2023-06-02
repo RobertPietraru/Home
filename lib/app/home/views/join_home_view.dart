@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pietrocka_home/core/presentation/widgets/buttons/long_button.dart';
-import 'package:pietrocka_home/core/presentation/widgets/inputfields/text_input_field.dart';
-import 'package:pietrocka_home/features/auth/presentation/auth_bloc/auth_bloc.dart';
-import 'package:pietrocka_home/features/tasks/presentation/blocs/join_home/join_home_cubit.dart';
+import 'package:homeapp/core/utils/translator.dart';
 
-import '../../../../core/global/styles.dart';
+import '../../../core/blocs/auth_bloc/auth_bloc.dart';
+import '../../../core/components/buttons/long_button.dart';
+import '../../../core/components/text_input_field.dart';
+import '../../../core/components/theme/app_theme.dart';
+import '../blocs/join_home/join_home_cubit.dart';
 
 class JoinHomeView extends StatelessWidget {
   const JoinHomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final theme = AppTheme.of(context);
     return BlocConsumer<JoinHomeCubit, JoinHomeState>(
       listener: (context, state) {
         if (state.isSuccessful) {
@@ -37,35 +39,35 @@ class JoinHomeView extends StatelessWidget {
                   width: 30,
                   height: 4,
                   decoration: BoxDecoration(
-                      color: Styles.secondaryColor,
+                      color: theme.secondaryColor,
                       borderRadius: BorderRadius.circular(20)),
                 ),
                 const SizedBox(height: 10),
-                const Text(
+                Text(
                   "Join Home",
-                  style: Styles.titleStyle1,
+                  style: theme.titleTextStyle,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 10),
                 TextInputField(
                   hint: "Home id",
-                  prefixIcon: Icons.home,
-                  error: state.errorMessage,
+                  leading: Icons.home,
+                  error: state.homeIdFailure,
                   onChanged: (newId) {
                     context.read<JoinHomeCubit>().onHomeIdChanged(newId);
                   },
                 ),
                 const SizedBox(height: 30),
                 LongButton(
-                    text: "Join",
-                    onPressed: context.read<AuthBloc>().state.isAuthenticated
-                        ? () async {
-                            final userState = context.read<AuthBloc>().state;
-                            await context
-                                .read<JoinHomeCubit>()
-                                .joinHome(userState.userId!);
-                          }
-                        : null),
+                  label: "Join",
+                  onPressed: () async {
+                    final userState = context.read<AuthBloc>().state;
+                    await context
+                        .read<JoinHomeCubit>()
+                        .joinHome(userState.userEntity!.id, context.translator);
+                  },
+                  isLoading: state.status == JoinHomeStatus.loading,
+                ),
                 const SizedBox(height: 40),
               ],
             ),
