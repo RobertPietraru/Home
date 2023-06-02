@@ -1,6 +1,6 @@
 import 'package:auth/auth.dart';
 import 'package:equatable/equatable.dart';
-import 'package:homeapp/core/classes/validation_failure.dart';
+import 'package:homeapp/core/failures/validation_failure.dart';
 import 'package:homeapp/core/utils/translator.dart';
 
 import '../../app/auth/validation/errors/confirm_password_validation_failures.dart';

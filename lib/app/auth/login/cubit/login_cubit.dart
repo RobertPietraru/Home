@@ -2,8 +2,8 @@ import 'package:auth/auth.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:homeapp/core/classes/app_failure.dart';
-import 'package:homeapp/core/classes/validation_failure.dart';
+import 'package:homeapp/core/failures/app_failure.dart';
+import 'package:homeapp/core/failures/validation_failure.dart';
 import 'package:homeapp/core/utils/translator.dart';
 
 import '../../../../core/blocs/auth_bloc/auth_bloc.dart';

@@ -1,4 +1,4 @@
-import '../../../../core/classes/validation_failure.dart';
+import '../../../../core/failures/validation_failure.dart';
 
 class AuthPasswordEmptyValidationFailure extends ValidationFailure {
   const AuthPasswordEmptyValidationFailure({super.code = 'empty-password'});

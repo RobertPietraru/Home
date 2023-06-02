@@ -3,11 +3,11 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homeapp/app/auth/validation/forms/confirmed_password.dart';
-import 'package:homeapp/core/classes/validation_failure.dart';
+import 'package:homeapp/core/failures/validation_failure.dart';
 import 'package:homeapp/core/utils/translator.dart';
 
 import '../../../../core/blocs/auth_bloc/auth_bloc.dart';
-import '../../../../core/classes/app_failure.dart';
+import '../../../../core/failures/app_failure.dart';
 import '../../validation/forms/email.dart';
 import '../../validation/forms/password.dart';
 

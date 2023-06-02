@@ -1,4 +1,4 @@
-import 'package:homeapp/core/classes/validation_failure.dart';
+import 'package:homeapp/core/failures/validation_failure.dart';
 
 class AuthConfirmPasswordEmptyValidationFailure extends ValidationFailure {
   const AuthConfirmPasswordEmptyValidationFailure(

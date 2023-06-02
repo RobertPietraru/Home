@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:homeapp/app/auth/validation/errors/email_validation_failures.dart';
 
-import '../../../../core/classes/validation_failure.dart';
+import '../../../../core/failures/validation_failure.dart';
 
 class Email extends FormzInput<String, ValidationFailure>
     with EquatableMixin {

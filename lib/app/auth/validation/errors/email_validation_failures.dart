@@ -1,4 +1,4 @@
-import '../../../../core/classes/validation_failure.dart';
+import '../../../../core/failures/validation_failure.dart';
 
 class AuthEmailEmptyValidationFailure extends ValidationFailure {
   const AuthEmailEmptyValidationFailure({super.code = 'empty-email'});
