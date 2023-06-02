@@ -21,7 +21,6 @@ class ConfirmedPassword extends FormzInput<String, ValidationFailure> {
     if (password == value) {
       return null;
     }
-    print(password == value);
     return const AuthConfirmPasswordMatchFailure();
   }
 }

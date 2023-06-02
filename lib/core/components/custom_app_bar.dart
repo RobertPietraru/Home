@@ -41,7 +41,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              AppLogo(color: mainColor ?? theme.primaryColor),
+              AppLogo(color: mainColor ?? theme.companyColor),
               const SizedBox(width: 10),
               Text(
                 "Pietrocka Home",
@@ -73,18 +73,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     context.read<LanguageCubit>().update(newValue);
                   },
                 );
-              },
-            ),
-            BlocBuilder<AuthBloc, AuthState>(
-              builder: (context, state) {
-                if (state is AuthAuthenticatedState) {
-                  return IconButton(
-                      onPressed: () => context
-                          .read<AuthBloc>()
-                          .add(const AuthUserLoggedOut()),
-                      icon: const Icon(Icons.logout));
-                }
-                return Container();
               },
             ),
           ],

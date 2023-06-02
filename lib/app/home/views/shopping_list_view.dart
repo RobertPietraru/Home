@@ -20,11 +20,12 @@ class ShoppingListView extends StatelessWidget {
     final theme = AppTheme.of(context);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
+        backgroundColor: theme.companyColor,
         onPressed: () {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => BlocProvider.value(
+                builder: (_) => BlocProvider.value(
                   value: BlocProvider.of<TasksCubit>(context),
                   child:
                       TaskCreationScreen(type: TaskType.shopping, home: home),
@@ -58,7 +59,9 @@ class ShoppingListView extends StatelessWidget {
               final entity = state.shoppingList[index];
               return TaskWidget(
                 entity: entity,
-                onPressed: () => context.read<TasksCubit>().toggleTask(entity, context.translator),
+                onPressed: () => context
+                    .read<TasksCubit>()
+                    .toggleTask(entity, context.translator),
                 onLongPress: () => showBottomSheet(context, entity),
               );
             },
@@ -79,7 +82,9 @@ class ShoppingListView extends StatelessWidget {
             children: [
               ListTile(
                   onTap: () {
-                    context.read<TasksCubit>().toggleTask(entity, context.translator);
+                    context
+                        .read<TasksCubit>()
+                        .toggleTask(entity, context.translator);
                     Navigator.pop(modalContext);
                   },
                   title: Text(entity.isCompleted ? "Uncomplete" : "Complete"),
@@ -93,7 +98,9 @@ class ShoppingListView extends StatelessWidget {
               ),
               ListTile(
                 onTap: () {
-                  context.read<TasksCubit>().deleteTask(entity, context.translator);
+                  context
+                      .read<TasksCubit>()
+                      .deleteTask(entity, context.translator);
                   Navigator.pop(modalContext);
                 },
                 title:

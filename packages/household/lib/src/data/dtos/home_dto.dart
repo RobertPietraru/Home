@@ -1,13 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
+import 'package:household/src/domain/entities/tasks_entities.dart';
 
-import '../../domain/domain.dart';
+class HomeDto extends Equatable {
+  final String id;
+  final String name;
+  final List<String> people;
+  final List<String> admins;
 
-class HomeDto extends HomeEntity {
   const HomeDto(
-      {required super.id,
-      required super.name,
-      required super.people,
-      required super.admins});
+      {required this.id,
+      required this.name,
+      required this.people,
+      required this.admins});
 
   static const String nameField = "name";
   static const String peopleField = "people";
@@ -21,6 +26,10 @@ class HomeDto extends HomeEntity {
     };
   }
 
+  HomeEntity toEntity() {
+    return HomeEntity(id: id, name: name, people: people, admins: admins);
+  }
+
   factory HomeDto.fromSnapshot(DocumentSnapshot snapshot) => HomeDto(
         name: snapshot[nameField],
         people:
@@ -29,4 +38,7 @@ class HomeDto extends HomeEntity {
             (snapshot[adminsField] as List<dynamic>).map((e) => "$e").toList(),
         id: snapshot.id,
       );
+
+  @override
+  List<Object?> get props => [id, name, people, admins];
 }

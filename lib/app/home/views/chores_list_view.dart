@@ -25,16 +25,17 @@ class _ChoresListViewState extends State<ChoresListView> {
     final theme = AppTheme.of(context);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
+        backgroundColor: theme.companyColor,
         onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => BlocProvider.value(
-                  value: BlocProvider.of<TasksCubit>(context),
-                  child: TaskCreationScreen(
-                      type: TaskType.chore, home: widget.home),
-                ),
-              ));
+          Navigator.push(context, MaterialPageRoute(
+            builder: (_) {
+              return BlocProvider.value(
+                value: BlocProvider.of<TasksCubit>(context),
+                child:
+                    TaskCreationScreen(type: TaskType.chore, home: widget.home),
+              );
+            },
+          ));
         },
         child: const Icon(Icons.add),
       ),
@@ -79,7 +80,9 @@ class _ChoresListViewState extends State<ChoresListView> {
                           children: [
                             ListTile(
                                 onTap: () {
-                                  context.read<TasksCubit>().toggleTask(entity, context.translator);
+                                  context
+                                      .read<TasksCubit>()
+                                      .toggleTask(entity, context.translator);
                                   Navigator.pop(modalContext);
                                 },
                                 title: Text(entity.isCompleted
@@ -95,7 +98,9 @@ class _ChoresListViewState extends State<ChoresListView> {
                             ),
                             ListTile(
                               onTap: () {
-                                context.read<TasksCubit>().deleteTask(entity,context.translator);
+                                context
+                                    .read<TasksCubit>()
+                                    .deleteTask(entity, context.translator);
                                 Navigator.pop(modalContext);
                               },
                               title: const Text("Delete",

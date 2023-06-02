@@ -25,7 +25,7 @@ class JoinHomeView extends StatelessWidget {
           padding:
               EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Container(
-            padding: const EdgeInsets.all(8.0),
+            padding: theme.standardPadding,
             decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(

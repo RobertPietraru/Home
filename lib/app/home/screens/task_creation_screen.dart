@@ -75,7 +75,8 @@ class TaskCreationChildScreen extends StatelessWidget {
       },
       builder: (context, state) {
         return Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: theme.standardPadding,
+
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

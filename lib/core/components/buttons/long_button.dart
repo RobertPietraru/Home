@@ -64,9 +64,14 @@ class LongButton extends StatelessWidget {
           ),
         ),
         if (error != null)
-          Text(
-            error!,
-            style: TextStyle(color: theme.bad),
+          Column(
+            children: [
+              SizedBox(height: theme.spacing.small),
+              Text(
+                error!,
+                style: theme.informationTextStyle.copyWith(color: theme.bad),
+              ),
+            ],
           )
       ],
     );

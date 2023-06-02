@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homeapp/app/home/blocs/cubit/homes_cubit.dart';
-import 'package:homeapp/app/home/blocs/tasks_cubit/tasks_cubit.dart';
+import 'package:homeapp/core/components/buttons/long_button.dart';
 import 'package:homeapp/core/components/custom_app_bar.dart';
+import 'package:homeapp/core/components/theme/app_theme.dart';
 
 import '../../../core/blocs/auth_bloc/auth_bloc.dart';
 import '../../../injection.dart';
@@ -15,6 +16,7 @@ class NoHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = AppTheme.of(context);
     return Scaffold(
       appBar: CustomAppBar(
         leading: IconButton(
@@ -28,7 +30,7 @@ class NoHomeScreen extends StatelessWidget {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: theme.standardPadding,
         child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -47,39 +49,20 @@ class NoHomeScreen extends StatelessWidget {
               ),
               Column(
                 children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: 50,
-                    child: TextButton(
-                      style: ButtonStyle(
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0)),
-                          ),
-                          backgroundColor: MaterialStateProperty.all(
-                              const Color(0xFF38963E))),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => BlocProvider.value(
-                                value: BlocProvider.of<TasksCubit>(context),
-                                child: CreateHomeScreen(),
-                              ),
-                            ));
-                      },
-                      child: const Text(
-                        "Create",
-                        style: TextStyle(
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16.0,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+                  LongButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => BlocProvider.value(
+                              value: BlocProvider.of<HomesCubit>(context),
+                              child: const CreateHomeScreen(),
+                            ),
+                          ));
+                    },
+                    label: 'Create',
+                    isLoading: false,
+                    color: theme.companyColor,
                   ),
                   TextButton(
                       onPressed: () {
@@ -89,7 +72,7 @@ class NoHomeScreen extends StatelessWidget {
                           backgroundColor: Colors.transparent,
                           builder: (modalContext) {
                             return BlocProvider(
-                              create: (context) => JoinHomeCubit(locator(),
+                              create: (_) => JoinHomeCubit(locator(),
                                   homesCubit: context.read<HomesCubit>()),
                               child: const JoinHomeView(),
                             );

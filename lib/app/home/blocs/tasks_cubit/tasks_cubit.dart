@@ -35,7 +35,7 @@ class TasksCubit extends Cubit<TasksState> {
     final indexInShoppingList = state.shoppingList.indexOf(taskEntity);
 
     late final TaskEntity? modifiedEntity;
-    emit(state.copyWith(status: TasksStatus.loading));
+    // emit(state.copyWith(status: TasksStatus.loading));
 
     if (taskEntity.isCompleted) {
       modifiedEntity = await uncompleteTask(taskEntity, translator);
@@ -64,7 +64,7 @@ class TasksCubit extends Cubit<TasksState> {
 
   Future<TaskEntity?> completeTask(
       TaskEntity taskEntity, Translator translator) async {
-    emit(state.copyWith(status: TasksStatus.loading));
+    // emit(state.copyWith(status: TasksStatus.loading));
 
     final response =
         await homeRepository.completeTask(CompleteTaskParams(task: taskEntity));
@@ -81,7 +81,7 @@ class TasksCubit extends Cubit<TasksState> {
 
   Future<TaskEntity?> uncompleteTask(
       TaskEntity taskEntity, Translator translator) async {
-    emit(state.copyWith(status: TasksStatus.loading));
+    // emit(state.copyWith(status: TasksStatus.loading));
 
     final response = await homeRepository
         .uncompleteTask(UncompleteTaskParams(task: taskEntity));
@@ -134,7 +134,9 @@ class TasksCubit extends Cubit<TasksState> {
         await homeRepository.deleteTask(DeleteTaskParams(task: entity));
 
     response.fold((l) {
-      emit(state.copyWith(error: AppFailure.fromTaskFailure(l, translator), status: TasksStatus.error));
+      emit(state.copyWith(
+          error: AppFailure.fromTaskFailure(l, translator),
+          status: TasksStatus.error));
       return;
     }, (r) {
       if (entity.type == TaskType.chore) {

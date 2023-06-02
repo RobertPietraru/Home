@@ -20,8 +20,14 @@ class HomeCreationState extends Equatable {
   });
 
   @override
-  List<Object> get props =>
-      [name, status, usesWithSomeoneElse, usesForChores, usesForShoppingList];
+  List<Object?> get props => [
+        name,
+        status,
+        usesWithSomeoneElse,
+        usesForChores,
+        usesForShoppingList,
+        failure
+      ];
 
   bool get isLoading {
     return status == HomeCreationStatus.loading;
@@ -31,9 +37,9 @@ class HomeCreationState extends Equatable {
     return status == HomeCreationStatus.created;
   }
 
- ValidationFailure? get validationFailure {
+  ValidationFailure? get validationFailure {
     return name.error;
-  } 
+  }
 
   HomeCreationState copyWith({
     HomeName? name,

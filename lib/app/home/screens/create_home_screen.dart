@@ -1,50 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:homeapp/app/home/blocs/cubit/homes_cubit.dart';
+import 'package:homeapp/core/components/custom_app_bar.dart';
+import 'package:homeapp/core/utils/translator.dart';
+import '../../../core/blocs/auth_bloc/auth_bloc.dart';
+import '../../../core/components/buttons/long_button.dart';
+import '../../../core/components/checkbox_input_field.dart';
+import '../../../core/components/text_input_field.dart';
 import '../../../injection.dart';
 import '../blocs/home_creation_cubit/home_creation_cubit.dart';
 
 class CreateHomeScreen extends StatelessWidget {
-  final TextEditingController nameController = TextEditingController();
-
-  CreateHomeScreen({super.key});
+  const CreateHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (ctx) => HomeCreationCubit(
         locator(),
-        homesBloc: context.read<HomesBloc>(),
+        homesCubit: context.read<HomesCubit>(),
       ),
-      child: ActualCreateHomeScreen(nameController: nameController),
+      child: const _CreateHomeScreen(),
     );
   }
 }
 
-class ActualCreateHomeScreen extends StatelessWidget {
-  const ActualCreateHomeScreen({
+class _CreateHomeScreen extends StatelessWidget {
+  const _CreateHomeScreen({
     Key? key,
-    required this.nameController,
   }) : super(key: key);
-
-  final TextEditingController nameController;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        iconTheme: const IconThemeData(
-          color: Colors.black,
-        ),
-        automaticallyImplyLeading: true,
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const PietrockaLogo(),
-      ),
+      appBar: const CustomAppBar(),
       body: BlocConsumer<HomeCreationCubit, HomeCreationState>(
         listener: (context, state) {
           if (state.isSuccessful) {
-            context.read<NavigationCubit>().pop(context);
+            Navigator.pop(context);
           }
         },
         builder: (context, state) {
@@ -57,8 +50,8 @@ class ActualCreateHomeScreen extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "To create a home, please fill out these fields:",
+                      Text(
+                        context.translator.toCreateAHome,
                         style: TextStyle(
                           fontStyle: FontStyle.normal,
                           fontWeight: FontWeight.w400,
@@ -68,13 +61,11 @@ class ActualCreateHomeScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       NameTextField(
-                        nameController: nameController,
                         state: state,
                       ),
                       const SizedBox(height: 20),
                       CheckboxInputField(
-                          title:
-                              "I plan on using this app along with other people (Family, roommates, etc)",
+                          title: context.translator.iPlanOnUsingWithFamily,
                           value: state.usesWithSomeoneElse,
                           onChanged: (e) {
                             context.read<HomeCreationCubit>().updateCheckbox(
@@ -84,8 +75,8 @@ class ActualCreateHomeScreen extends StatelessWidget {
                       const SizedBox(
                         height: 12,
                       ),
-                      const Text(
-                        "I plan on using this app for: ",
+                       Text(
+                        context.translator.iPlanOnUsingFor,
                         style: TextStyle(
                           fontStyle: FontStyle.normal,
                           fontWeight: FontWeight.w400,
@@ -95,14 +86,14 @@ class ActualCreateHomeScreen extends StatelessWidget {
                       ),
                       CheckboxInputField(
                           value: state.usesForChores,
-                          title: "Managing chores around the house",
+                          title: context.translator.managingChores,
                           onChanged: (e) {
                             context.read<HomeCreationCubit>().updateCheckbox(
                                   usesForChores: e,
                                 );
                           }),
                       CheckboxInputField(
-                          title: "Managing a shopping list",
+                          title:  context.translator.managingAShoppingList  ,
                           value: state.usesForShoppingList,
                           onChanged: (e) {
                             context.read<HomeCreationCubit>().updateCheckbox(
@@ -114,18 +105,18 @@ class ActualCreateHomeScreen extends StatelessWidget {
                   Column(
                     children: [
                       LongButton(
-                        text: "Create",
-                        onPressed:
-                            context.read<AuthBloc>().state.isAuthenticated
-                                ? () => context
-                                    .read<HomeCreationCubit>()
-                                    .createHome(
-                                        context.read<AuthBloc>().state.userId!)
-                                : null,
+                        label: "Create",
+                        isLoading: state.isLoading,
+                        error: state.failure?.message,
+                        onPressed: () => context
+                            .read<HomeCreationCubit>()
+                            .createHome(
+                                context.read<AuthBloc>().state.userEntity!.id,
+                                context.translator),
                       ),
                       TextButton(
                           onPressed: () {
-                            context.read<NavigationCubit>().pop(context);
+                            Navigator.pop(context);
                           },
                           child: const Text("Cancel")),
                     ],
@@ -141,20 +132,15 @@ class ActualCreateHomeScreen extends StatelessWidget {
 class NameTextField extends StatelessWidget {
   const NameTextField({
     Key? key,
-    required this.nameController,
     required this.state,
   }) : super(key: key);
   final HomeCreationState state;
-
-  final TextEditingController nameController;
 
   @override
   Widget build(BuildContext context) {
     return TextInputField(
       hint: 'Home name',
-      prefixIcon: Icons.home,
-      error: state.homeNameErrorMessage,
-      controller: nameController,
+      leading: Icons.home,
       onChanged: (e) {
         context.read<HomeCreationCubit>().homeNameChanged(e);
       },

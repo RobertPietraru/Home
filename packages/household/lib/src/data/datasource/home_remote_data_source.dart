@@ -67,7 +67,7 @@ class HomeFirebaseDataSourceIMPL implements HomeRemoteDataSource {
 
     final id = (await _db.homesCollection.add(dto.toSnapshotMap())).id;
 
-    return CreateHomeResponse(homeEntity: dto.copyWith(id: id));
+    return CreateHomeResponse(homeEntity: dto.toEntity().copyWith(id: id));
   }
 
   @override
@@ -83,7 +83,7 @@ class HomeFirebaseDataSourceIMPL implements HomeRemoteDataSource {
             .get())
         .docs;
     return GetHomesResponse(
-        homes: documents.map((e) => HomeDto.fromSnapshot(e)).toList());
+        homes: documents.map((e) => HomeDto.fromSnapshot(e).toEntity()).toList());
   }
 
   @override
@@ -93,13 +93,19 @@ class HomeFirebaseDataSourceIMPL implements HomeRemoteDataSource {
 
   @override
   Future<JoinHomeResponse> joinHome(JoinHomeParams params) async {
-    await _db.homesCollection.doc(params.homeId).update({
-      HomeDto.peopleField: FieldValue.arrayUnion([params.userId]),
-    });
+    try {
+      await _db.homesCollection.doc(params.homeId).update({
+        HomeDto.peopleField: FieldValue.arrayUnion([params.userId]),
+      });
+    } on FirebaseException catch (e) {
+      if (e.code == 'not-found') {
+        throw HomeNotFoundTaskFailure();
+      }
+    }
 
     final doc = await _db.homesCollection.doc(params.homeId).get();
 
-    return JoinHomeResponse(joinedHome: HomeDto.fromSnapshot(doc));
+    return JoinHomeResponse(joinedHome: HomeDto.fromSnapshot(doc).toEntity());
   }
 
   @override

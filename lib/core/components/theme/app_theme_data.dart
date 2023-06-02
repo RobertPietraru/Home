@@ -31,7 +31,7 @@ abstract class AppThemeData {
   Color get defaultBackgroundColor;
   Color get primaryColor;
   Color get secondaryColor;
-  Color get companyColor => Colors.green;
+  Color get companyColor => const Color(0xFF38963E);
 
   Color get bad => Colors.red;
   Color get good => Colors.green;
@@ -64,7 +64,7 @@ class LightAppThemeData extends AppThemeData {
   @override
   ThemeData materialThemeData(BuildContext context) => ThemeData(
         brightness: Brightness.light,
-        primarySwatch: primaryColor.toMaterialColor(),
+        primarySwatch: companyColor.toMaterialColor(),
         dividerTheme: _dividerThemeData,
       );
 

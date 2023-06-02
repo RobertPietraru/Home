@@ -56,10 +56,10 @@ class HomesCubit extends Cubit<HomesState> {
   }
 
   Future<void> getHomesOfUser(String userId, BuildContext context) async {
-    final either =
+    final response =
         await homeRepository.getHomes(GetHomesParams(userId: userId));
 
-    either.fold((l) {
+    response.fold((l) {
       emit(state.copyWith(
         failure: AppFailure.fromTaskFailure(l, context.translator),
         status: HomesStatus.error,
@@ -67,6 +67,7 @@ class HomesCubit extends Cubit<HomesState> {
     }, (r) {
       emit(state.copyWith(
         homes: r.homes,
+        failure: null,
         status: HomesStatus.retrieved,
       ));
     });

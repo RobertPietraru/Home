@@ -41,6 +41,14 @@ class HomeCreationCubit extends Cubit<HomeCreationState> {
   }
 
   Future<void> createHome(String userId, Translator translator) async {
+    if (state.validationFailure != null) {
+      emit(state.copyWith(
+        status: HomeCreationStatus.error,
+        failure: AppFailure.fromTaskValidationFailure(
+            state.validationFailure!, translator),
+      ));
+      return;
+    }
     emit(state.copyWith(status: HomeCreationStatus.loading));
 
     final obj = await homeRepository

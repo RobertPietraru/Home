@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_theme.dart';
+
 class AppBarButton extends StatelessWidget {
   const AppBarButton(
       {super.key,
@@ -17,8 +19,9 @@ class AppBarButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = AppTheme.of(context);
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: theme.standardPadding,
       child: FilledButton(
         style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(
