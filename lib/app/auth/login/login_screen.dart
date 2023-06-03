@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homeapp/core/components/custom_app_bar.dart';
 import 'package:homeapp/core/components/buttons/long_button.dart';
-import 'package:homeapp/core/components/text_input_field.dart';
+import 'package:homeapp/core/components/input_fields/text_input_field.dart';
 import 'package:homeapp/core/components/theme/app_theme.dart';
 import 'package:homeapp/core/utils/translator.dart';
 import 'package:homeapp/injection.dart';

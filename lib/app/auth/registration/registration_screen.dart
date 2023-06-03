@@ -6,7 +6,7 @@ import 'package:homeapp/core/utils/translator.dart';
 import 'package:homeapp/injection.dart';
 
 import '../../../../../core/components/buttons/long_button.dart';
-import '../../../../../core/components/text_input_field.dart';
+import '../../../core/components/input_fields/text_input_field.dart';
 import '../../../../../core/components/theme/app_theme.dart';
 import '../../../core/blocs/auth_bloc/auth_bloc.dart';
 import '../login/login_screen.dart';

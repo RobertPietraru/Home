@@ -5,8 +5,8 @@ import 'package:homeapp/core/components/custom_app_bar.dart';
 import 'package:homeapp/core/utils/translator.dart';
 import '../../../core/blocs/auth_bloc/auth_bloc.dart';
 import '../../../core/components/buttons/long_button.dart';
-import '../../../core/components/checkbox_input_field.dart';
-import '../../../core/components/text_input_field.dart';
+import '../../../core/components/input_fields/checkbox_input_field.dart';
+import '../../../core/components/input_fields/text_input_field.dart';
 import '../../../injection.dart';
 import '../blocs/home_creation_cubit/home_creation_cubit.dart';
 
