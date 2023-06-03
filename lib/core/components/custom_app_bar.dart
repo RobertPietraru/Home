@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:homeapp/core/components/components.dart';
 import 'package:homeapp/core/utils/translator.dart';
 
-import '../blocs/auth_bloc/auth_bloc.dart';
 import '../blocs/language_cubit/language_cubit.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {

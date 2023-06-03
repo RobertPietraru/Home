@@ -89,7 +89,8 @@
   "joinHome": "Join home",
   "deadline": "Deadline",
 
-  "provideTaskTitle": "You have to provide a task title"
+  "provideTaskTitle": "You have to provide a task title",
+  "chores": "Chores"
   
 }
 

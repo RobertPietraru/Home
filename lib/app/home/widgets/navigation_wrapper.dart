@@ -57,9 +57,7 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
               return NavigationBar(
                   index: index,
                   onPressed: (i) {
-                    setState(() {
-                      index = i;
-                    });
+                    setState(() => index = i);
                     context.read<TasksCubit>().getTasksForType(
                         homesState.currentHome,
                         index == 0 ? TaskType.chore : TaskType.shopping,

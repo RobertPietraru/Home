@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:homeapp/core/components/theme/app_theme.dart';
 import 'package:household/household.dart';
 
 class TaskWidget extends StatelessWidget {
@@ -46,7 +47,9 @@ class TaskWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = AppTheme.of(context);
     return ListTile(
+      contentPadding: theme.standardPadding.copyWith(bottom: 0, top: 0),
       title: Text(
         task.body,
         style: TextStyle(

@@ -54,10 +54,10 @@ class _MyAppState extends State<MyApp> {
                             return BlocProvider(
                               create: (context) => HomesCubit(locator())
                                 ..getHomesOfUser(state.userEntity!.id, context),
-                              child: NavigationWrapper(),
+                              child: const NavigationWrapper(),
                             );
                           case AuthUnauthenticatedState:
-                            return RegistrationScreen();
+                            return const RegistrationScreen();
                           case AuthFailureState:
                             return const Text('aasdf');
                           default:
@@ -74,7 +74,6 @@ class _MyAppState extends State<MyApp> {
                       localizationsDelegates:
                           AppLocalizations.localizationsDelegates,
                       supportedLocales: AppLocalizations.supportedLocales,
-                      // localizationsDelegates: [ AppLocalizations.delegate, GlobalMaterialLocalizations.delegate, GlobalWidgetsLocalizations.delegate, GlobalCupertinoLocalizations.delegate, ],
                     );
                   }),
                 );

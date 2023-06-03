@@ -10,7 +10,7 @@ class CheckboxInputField extends StatelessWidget {
 
   final bool value;
   final String title;
-  final Null Function(dynamic e) onChanged;
+  final void Function(bool? e) onChanged;
 
   @override
   Widget build(BuildContext context) {
