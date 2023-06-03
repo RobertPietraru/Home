@@ -24,7 +24,7 @@ class LongButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = AppTheme.of(context);
-    final color = this.color ?? theme.primaryColor;
+    final color = this.color ?? theme.companyColor;
     return Column(
       children: [
         SizedBox(

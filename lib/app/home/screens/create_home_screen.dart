@@ -77,7 +77,7 @@ class _CreateHomeScreen extends StatelessWidget {
                       ),
                        Text(
                         context.translator.iPlanOnUsingFor,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontStyle: FontStyle.normal,
                           fontWeight: FontWeight.w400,
                           fontSize: 18.0,

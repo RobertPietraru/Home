@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:household/household.dart';
 
 class TaskWidget extends StatelessWidget {
-  final TaskEntity entity;
+  final TaskEntity task;
   final VoidCallback onPressed;
   final VoidCallback onLongPress;
   const TaskWidget({
     super.key,
-    required this.entity,
+    required this.task,
     required this.onPressed,
     required this.onLongPress,
   });
 
   double getPercentTillDeadline() {
-    if (entity.deadline == null) return 0;
-    final creationDate = entity.creationDate;
+    if (task.deadline == null) return 0;
+    final creationDate = task.creationDate;
     final present = DateTime.now();
-    final deadlineDate = entity.deadline!;
+    final deadlineDate = task.deadline!;
     //// ----------------------C----------P-------------D
     if (present.isAfter(deadlineDate)) {
       /// we went over the deadline
@@ -33,7 +33,8 @@ class TaskWidget extends StatelessWidget {
   }
 
   Color getColorCode() {
-    final score = (getPercentTillDeadline() + entity.importance) / 2;
+    final score = task.importance;
+
     if (score < 0.4) {
       return Colors.green;
     }
@@ -47,17 +48,17 @@ class TaskWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(
-        entity.body,
+        task.body,
         style: TextStyle(
-            color: entity.isCompleted ? Colors.grey : Colors.black,
-            decoration: entity.isCompleted ? TextDecoration.lineThrough : null),
+            color: task.isCompleted ? Colors.grey : Colors.black,
+            decoration: task.isCompleted ? TextDecoration.lineThrough : null),
       ),
       onTap: onPressed,
       onLongPress: onLongPress,
-      leading: entity.type == TaskType.chore
+      leading: task.type == TaskType.chore
           ? const Icon(Icons.cleaning_services)
           : const Icon(Icons.shopping_bag),
-      trailing: entity.isCompleted
+      trailing: task.isCompleted
           ? const Icon(Icons.done)
           : Container(
               width: 20,

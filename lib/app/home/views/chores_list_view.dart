@@ -66,7 +66,7 @@ class _ChoresListViewState extends State<ChoresListView> {
             itemBuilder: (context, index) {
               final entity = state.chores[index];
               return TaskWidget(
-                entity: entity,
+                task: entity,
                 onPressed: () => context
                     .read<TasksCubit>()
                     .toggleTask(entity, context.translator),
@@ -105,7 +105,7 @@ class _ChoresListViewState extends State<ChoresListView> {
                                     .deleteTask(entity, context.translator);
                                 Navigator.pop(modalContext);
                               },
-                              title:  Text(context.translator.delete,
+                              title: Text(context.translator.delete,
                                   style: TextStyle(color: Colors.red)),
                               leading:
                                   const Icon(Icons.delete, color: Colors.red),

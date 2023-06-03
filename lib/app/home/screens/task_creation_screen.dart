@@ -46,7 +46,7 @@ class TaskCreationChildScreen extends StatelessWidget {
   const TaskCreationChildScreen(
       {super.key, required this.type, required this.home});
 
-  String indicatorBasedOnPosition(double position, BuildContext context) {
+  String indicatorTextBasedOnPosition(double position, BuildContext context) {
     if (position < 0.4) {
       return context.translator.unimportant;
     }
@@ -109,7 +109,7 @@ class TaskCreationChildScreen extends StatelessWidget {
                           valueIndicatorTextStyle:
                               const TextStyle(fontSize: 18)),
                       child: Slider(
-                          label: indicatorBasedOnPosition(
+                          label: indicatorTextBasedOnPosition(
                               state.importance, context),
                           min: 0,
                           max: 1,

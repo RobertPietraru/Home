@@ -59,7 +59,7 @@ class ShoppingListView extends StatelessWidget {
             itemBuilder: (context, index) {
               final entity = state.shoppingList[index];
               return TaskWidget(
-                entity: entity,
+                task: entity,
                 onPressed: () => context
                     .read<TasksCubit>()
                     .toggleTask(entity, context.translator),
