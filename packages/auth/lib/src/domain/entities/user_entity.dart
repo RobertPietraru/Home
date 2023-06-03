@@ -1,4 +1,3 @@
-
 import 'package:equatable/equatable.dart';
 
 class UserEntity extends Equatable {
@@ -8,6 +7,8 @@ class UserEntity extends Equatable {
     this.email,
     required this.name,
   });
+
+  static const mock = UserEntity(id: 'id', name: 'name');
 
   final String? email;
   final String id;
