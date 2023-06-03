@@ -25,7 +25,7 @@ class HomesState extends Equatable {
 
   HomesState copyWith({
     List<HomeEntity>? homes,
-    AppFailure? failure = AppFailure.mockForDynamic,
+    AppFailure? failure = AppFailure.mock,
     HomesStatus? status,
   }) {
     return HomesState(

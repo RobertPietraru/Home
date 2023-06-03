@@ -13,7 +13,7 @@ class LoginState extends Equatable {
   final Email email;
   final Password password;
   final LoginStatus status;
-  final AppFailure<AuthFieldWithIssue>? failure;
+  final AppFailure? failure;
 
   @override
   List<Object?> get props => [email, password, status, failure];
@@ -56,12 +56,12 @@ class LoginState extends Equatable {
     Email? email,
     Password? password,
     LoginStatus? status,
-    AppFailure<AuthFieldWithIssue>? failure = AppFailure.mockForAuth,
+    AppFailure? failure = AppFailure.mock,
   }) =>
       LoginState(
         email: email ?? this.email,
         password: password ?? this.password,
         status: status ?? this.status,
-        failure: failure == AppFailure.mockForAuth ? this.failure : failure,
+        failure: failure == AppFailure.mock ? this.failure : failure,
       );
 }

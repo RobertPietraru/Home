@@ -27,10 +27,21 @@ class TaskCreationState extends Equatable {
     return body.error;
   }
 
+  String? get titleError =>
+      failure?.fieldWithIssue == FieldWithIssue.taskCreationTitle
+          ? failure?.message
+          : null;
+  List<FieldWithIssue> get _fields => [FieldWithIssue.taskCreationTitle];
+
+  String? get fieldlessError => failure == null
+      ? null
+      : _fields.contains(failure!.fieldWithIssue)
+          ? null
+          : failure!.message;
 
   TaskCreationState copyWith({
     TaskTitle? body,
-    AppFailure? failure = AppFailure.mockForDynamic,
+    AppFailure? failure = AppFailure.mock,
     TaskCreationStatus? status,
     DateTime? deadline,
     double? importance,
@@ -40,7 +51,7 @@ class TaskCreationState extends Equatable {
       status: status ?? this.status,
       importance: importance ?? this.importance,
       deadline: deadline ?? this.deadline,
-      failure: failure == AppFailure.mockForDynamic ? this.failure : failure,
+      failure: failure == AppFailure.mock ? this.failure : failure,
     );
   }
 }

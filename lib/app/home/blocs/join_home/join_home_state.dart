@@ -27,12 +27,12 @@ class JoinHomeState extends Equatable {
 
   JoinHomeState copyWith({
     HomeId? homeId,
-    AppFailure? error = AppFailure.mockForDynamic,
+    AppFailure? error = AppFailure.mock,
     JoinHomeStatus? status,
   }) {
     return JoinHomeState(
       homeId: homeId ?? this.homeId,
-      error: error == AppFailure.mockForDynamic ? this.error : error,
+      error: error == AppFailure.mock ? this.error : error,
       status: status ?? this.status,
     );
   }

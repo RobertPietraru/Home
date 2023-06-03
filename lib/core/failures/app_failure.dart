@@ -2,6 +2,7 @@ import 'package:auth/auth.dart';
 import 'package:equatable/equatable.dart';
 import 'package:homeapp/app/home/validation/failures/home_id_empty_validation_failure.dart';
 import 'package:homeapp/app/home/validation/failures/home_name_empty_validation_failure.dart';
+import 'package:homeapp/app/home/validation/failures/task_title_empty.dart';
 import 'package:homeapp/core/failures/validation_failure.dart';
 import 'package:homeapp/core/utils/translator.dart';
 import 'package:household/household.dart';
@@ -9,123 +10,148 @@ import 'package:household/household.dart';
 import '../../app/auth/validation/errors/confirm_password_validation_failures.dart';
 import '../../app/auth/validation/errors/email_validation_failures.dart';
 import '../../app/auth/validation/errors/password_validation_failures.dart';
-import '../blocs/auth_bloc/auth_bloc.dart';
 
-class AppFailure<T> extends Equatable {
+enum FieldWithIssue {
+  // authFlow
+  authEmail,
+  authPassword,
+  authConfirmationPassword,
+  // home
+  homeName,
+  homeId,
+
+  // taskCreation
+  taskCreationTitle,
+}
+
+class AppFailure extends Equatable {
   final String code;
-  final T? fieldWithIssue;
+  final FieldWithIssue? fieldWithIssue;
   final String message;
 
   const AppFailure(
       {this.fieldWithIssue, required this.code, required this.message});
 
-  static AppFailure<AuthFieldWithIssue> fromAuthFailure(
+  static AppFailure fromAuthFailure(
       AuthFailure failure, Translator translator) {
     final errors = {
-      DisabledUserFailure: AppFailure<AuthFieldWithIssue>(
+      DisabledUserFailure: AppFailure(
           code: failure.code,
           message: translator.disabledUserError,
-          fieldWithIssue: AuthFieldWithIssue.email),
-      EmailAlreadyExistsFailure: AppFailure<AuthFieldWithIssue>(
+          fieldWithIssue: FieldWithIssue.authEmail),
+      EmailAlreadyExistsFailure: AppFailure(
           code: failure.code,
           message: translator.emailAlreadyExistsError,
-          fieldWithIssue: AuthFieldWithIssue.email),
-      InvalidEmailFailure: AppFailure<AuthFieldWithIssue>(
+          fieldWithIssue: FieldWithIssue.authEmail),
+      InvalidEmailFailure: AppFailure(
           code: failure.code,
           message: translator.invalidEmailError,
-          fieldWithIssue: AuthFieldWithIssue.email),
-      UserNotFoundFailure: AppFailure<AuthFieldWithIssue>(
+          fieldWithIssue: FieldWithIssue.authEmail),
+      UserNotFoundFailure: AppFailure(
           code: failure.code,
           message: translator.userNotFoundError,
-          fieldWithIssue: AuthFieldWithIssue.email),
-      WrongAuthenticationMethodFailure: AppFailure<AuthFieldWithIssue>(
+          fieldWithIssue: FieldWithIssue.authEmail),
+      WrongAuthenticationMethodFailure: AppFailure(
           code: failure.code,
           message: translator.wrongAuthenticationMethodError,
-          fieldWithIssue: AuthFieldWithIssue.other),
-      InvalidCredentialsFailure: AppFailure<AuthFieldWithIssue>(
+          fieldWithIssue: null),
+      InvalidCredentialsFailure: AppFailure(
           code: failure.code,
           message: translator.invalidCredentialsError,
-          fieldWithIssue: AuthFieldWithIssue.other),
-      InvalidVerificationCodeFailure: AppFailure<AuthFieldWithIssue>(
+          fieldWithIssue: null),
+      InvalidVerificationCodeFailure: AppFailure(
           code: failure.code,
           message: translator.invalidVerificationCodeError,
-          fieldWithIssue: AuthFieldWithIssue.other),
-      MissingAuthenticationFailure: AppFailure<AuthFieldWithIssue>(
+          fieldWithIssue: null),
+      MissingAuthenticationFailure: AppFailure(
           code: failure.code,
           message: translator.missingAuthenticationError,
-          fieldWithIssue: AuthFieldWithIssue.other),
-      MissingPermissionFailure: AppFailure<AuthFieldWithIssue>(
+          fieldWithIssue: null),
+      MissingPermissionFailure: AppFailure(
           code: failure.code,
           message: translator.missingPermissionError,
-          fieldWithIssue: AuthFieldWithIssue.other),
-      NetworkAuthFailure: AppFailure<AuthFieldWithIssue>(
+          fieldWithIssue: null),
+      NetworkAuthFailure: AppFailure(
           code: failure.code,
           message: translator.networkError,
-          fieldWithIssue: AuthFieldWithIssue.other),
-      UnknownAuthFailure: AppFailure<AuthFieldWithIssue>(
+          fieldWithIssue: null),
+      UnknownAuthFailure: AppFailure(
           code: failure.code,
           message: translator.thereWasAnError,
-          fieldWithIssue: AuthFieldWithIssue.other),
-      InvalidPasswordFailure: AppFailure<AuthFieldWithIssue>(
+          fieldWithIssue: null),
+      InvalidPasswordFailure: AppFailure(
           code: failure.code,
           message: translator.invalidPasswordError,
-          fieldWithIssue: AuthFieldWithIssue.password),
-      WeakPasswordFailure: AppFailure<AuthFieldWithIssue>(
+          fieldWithIssue: FieldWithIssue.authPassword),
+      WeakPasswordFailure: AppFailure(
           code: failure.code,
           message: translator.weakPasswordError,
-          fieldWithIssue: AuthFieldWithIssue.password),
-      WrongPasswordFailure: AppFailure<AuthFieldWithIssue>(
+          fieldWithIssue: FieldWithIssue.authPassword),
+      WrongPasswordFailure: AppFailure(
           code: failure.code,
           message: translator.wrongPasswordError,
-          fieldWithIssue: AuthFieldWithIssue.password),
+          fieldWithIssue: FieldWithIssue.authPassword),
     };
     return errors[failure.runtimeType] ??
-        AppFailure<AuthFieldWithIssue>(
+        AppFailure(
           code: failure.code,
           message: translator.thereWasAnError,
-          fieldWithIssue: AuthFieldWithIssue.other,
+          fieldWithIssue: null,
         );
   }
 
-  static AppFailure<AuthFieldWithIssue> fromAuthValidationFailure(
+  static AppFailure fromValidationFailure(
       ValidationFailure failure, Translator translator) {
     final x = {
-      AuthConfirmPasswordEmptyValidationFailure: AppFailure<AuthFieldWithIssue>(
+      AuthConfirmPasswordEmptyValidationFailure: AppFailure(
         code: failure.code,
         message: translator.confirmPasswordEmptyValidationError,
-        fieldWithIssue: AuthFieldWithIssue.confirmedPassword,
+        fieldWithIssue: FieldWithIssue.authConfirmationPassword,
       ),
-      AuthConfirmPasswordMatchFailure: AppFailure<AuthFieldWithIssue>(
+      AuthConfirmPasswordMatchFailure: AppFailure(
         code: failure.code,
         message: translator.confirmPasswordMatchError,
-        fieldWithIssue: AuthFieldWithIssue.confirmedPassword,
+        fieldWithIssue: FieldWithIssue.authConfirmationPassword,
       ),
-      AuthEmailEmptyValidationFailure: AppFailure<AuthFieldWithIssue>(
+      AuthEmailEmptyValidationFailure: AppFailure(
         code: failure.code,
         message: translator.emailEmptyValidationError,
-        fieldWithIssue: AuthFieldWithIssue.email,
+        fieldWithIssue: FieldWithIssue.authEmail,
       ),
-      AuthEmailInvalidFailure: AppFailure<AuthFieldWithIssue>(
+      AuthEmailInvalidFailure: AppFailure(
         code: failure.code,
         message: translator.invalidEmailError,
-        fieldWithIssue: AuthFieldWithIssue.email,
+        fieldWithIssue: FieldWithIssue.authEmail,
       ),
-      AuthPasswordEmptyValidationFailure: AppFailure<AuthFieldWithIssue>(
+      AuthPasswordEmptyValidationFailure: AppFailure(
         code: failure.code,
         message: translator.passwordEmptyValidationError,
-        fieldWithIssue: AuthFieldWithIssue.password,
+        fieldWithIssue: FieldWithIssue.authPassword,
       ),
-      AuthPasswordInvalidFailure: AppFailure<AuthFieldWithIssue>(
+      AuthPasswordInvalidFailure: AppFailure(
         code: failure.code,
         message: translator.invalidPasswordError,
-        fieldWithIssue: AuthFieldWithIssue.password,
+        fieldWithIssue: FieldWithIssue.authPassword,
       ),
+      HomeIdEmptyValidationFailure: AppFailure(
+          code: failure.code,
+          fieldWithIssue: FieldWithIssue.homeId,
+          message: translator.homeIdEmptyValidationError),
+      HomeNameEmptyValidationFailure: AppFailure(
+          code: failure.code,
+          fieldWithIssue: FieldWithIssue.homeName,
+          message: translator.homeNameEmptyValidationError),
+      TaskTitleEmptyValidationFailure: AppFailure(
+        code: failure.code,
+        message: translator.provideTaskTitle,
+        fieldWithIssue: FieldWithIssue.taskCreationTitle,
+      )
     };
     return x[failure.runtimeType] ??
-        AppFailure<AuthFieldWithIssue>(
+        AppFailure(
           code: failure.code,
           message: translator.thereWasAnError,
-          fieldWithIssue: AuthFieldWithIssue.other,
+          fieldWithIssue: null,
         );
   }
 
@@ -165,34 +191,14 @@ class AppFailure<T> extends Equatable {
           message: translator.abortedTaskError,
           fieldWithIssue: null),
     };
-    return x[failure.runtimeType] ??
-        AppFailure(
-          code: failure.code,
-          message: translator.thereWasAnError,
-        );
+    return x[failure.runtimeType] ?? unknown(translator);
   }
 
-  static const AppFailure<AuthFieldWithIssue> mockForAuth =
-      AppFailure<AuthFieldWithIssue>(code: 'mock', message: '');
-  static const AppFailure mockForDynamic =
-      AppFailure(code: 'mock', message: '');
+  static const AppFailure mock = AppFailure(code: 'mock', message: '');
 
   @override
   List<Object?> get props => [code, fieldWithIssue];
 
-  static AppFailure fromTaskValidationFailure(
-      ValidationFailure validationFailure, Translator translator) {
-    final errors = {
-      HomeIdEmptyValidationFailure: AppFailure(
-          code: validationFailure.code,
-          message: translator.homeIdEmptyValidationError),
-      HomeNameEmptyValidationFailure: AppFailure(
-          code: validationFailure.code,
-          message: translator.homeNameEmptyValidationError)
-    };
-    return errors[validationFailure.runtimeType] ?? unknown(translator);
-  }
-
-  static AppFailure<G> unknown<G>(Translator translator) =>
-      AppFailure<G>(code: 'unknown', message: translator.thereWasAnError);
+  static AppFailure unknown(Translator translator) =>
+      AppFailure(code: 'unknown', message: translator.thereWasAnError);
 }

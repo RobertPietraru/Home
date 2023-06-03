@@ -37,7 +37,7 @@ class LoginCubit extends Cubit<LoginState> {
     if (state.validationFailure != null) {
       emit(state.copyWith(
           status: LoginStatus.error,
-          failure: AppFailure.fromAuthValidationFailure(
+          failure: AppFailure.fromValidationFailure(
               state.validationFailure!, context.translator)));
       return;
     }

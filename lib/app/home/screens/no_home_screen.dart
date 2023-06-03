@@ -36,10 +36,10 @@ class NoHomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const SizedBox(),
-               Center(
+              Center(
                 child: Text(
-                  context.translator.youDontHaveAHome ,
-                  style: TextStyle(
+                  context.translator.youDontHaveAHome,
+                  style: const TextStyle(
                     fontStyle: FontStyle.normal,
                     fontWeight: FontWeight.w400,
                     fontSize: 20.0,
@@ -80,9 +80,9 @@ class NoHomeScreen extends StatelessWidget {
                           },
                         );
                       },
-                      child:  Text(
+                      child: Text(
                         context.translator.join,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 16.0,
                         ),

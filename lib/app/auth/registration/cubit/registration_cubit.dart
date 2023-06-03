@@ -59,7 +59,7 @@ class RegistrationCubit extends Cubit<RegistrationState> {
     if (state.validationFailure != null) {
       emit(state.copyWith(
           status: RegistrationStatus.error,
-          failure: AppFailure.fromAuthValidationFailure(
+          failure: AppFailure.fromValidationFailure(
               state.validationFailure!, context.translator)));
       return;
     }

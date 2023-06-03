@@ -15,7 +15,7 @@ class RegistrationState extends Equatable {
   final Password password;
   final ConfirmedPassword confirmedPassword;
   final RegistrationStatus status;
-  final AppFailure<AuthFieldWithIssue>? failure;
+  final AppFailure? failure;
 
   @override
   List<Object?> get props =>
@@ -59,13 +59,13 @@ class RegistrationState extends Equatable {
     Password? password,
     ConfirmedPassword? confirmedPassword,
     RegistrationStatus? status,
-    AppFailure<AuthFieldWithIssue>? failure = AppFailure.mockForAuth,
+    AppFailure? failure = AppFailure.mock,
   }) =>
       RegistrationState(
         confirmedPassword: confirmedPassword ?? this.confirmedPassword,
         email: email ?? this.email,
         password: password ?? this.password,
         status: status ?? this.status,
-        failure: failure == AppFailure.mockForAuth ? this.failure : failure,
+        failure: failure == AppFailure.mock ? this.failure : failure,
       );
 }

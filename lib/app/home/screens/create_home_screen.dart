@@ -52,7 +52,7 @@ class _CreateHomeScreen extends StatelessWidget {
                     children: [
                       Text(
                         context.translator.toCreateAHome,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontStyle: FontStyle.normal,
                           fontWeight: FontWeight.w400,
                           fontSize: 20.0,
@@ -75,7 +75,7 @@ class _CreateHomeScreen extends StatelessWidget {
                       const SizedBox(
                         height: 12,
                       ),
-                       Text(
+                      Text(
                         context.translator.iPlanOnUsingFor,
                         style: const TextStyle(
                           fontStyle: FontStyle.normal,
@@ -93,7 +93,7 @@ class _CreateHomeScreen extends StatelessWidget {
                                 );
                           }),
                       CheckboxInputField(
-                          title:  context.translator.managingAShoppingList  ,
+                          title: context.translator.managingAShoppingList,
                           value: state.usesForShoppingList,
                           onChanged: (e) {
                             context.read<HomeCreationCubit>().updateCheckbox(
@@ -118,7 +118,7 @@ class _CreateHomeScreen extends StatelessWidget {
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child:  Text(context.translator.cancel)),
+                          child: Text(context.translator.cancel)),
                     ],
                   ),
                 ]),

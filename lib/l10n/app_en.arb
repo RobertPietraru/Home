@@ -86,6 +86,10 @@
   "logOut": "Log out",
   "homeId": "Home id",
   "noShoppingList": "No shopping list",
-  "joinHome": "Join home"
+  "joinHome": "Join home",
+  "deadline": "Deadline",
+
+  "provideTaskTitle": "You have to provide a task title"
+  
 }
 

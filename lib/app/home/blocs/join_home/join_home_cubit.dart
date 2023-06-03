@@ -34,7 +34,7 @@ class JoinHomeCubit extends Cubit<JoinHomeState> {
     if (state.validationFailure != null) {
       emit(state.copyWith(
         homeId: HomeId.dirty(state.homeId.value),
-        error: AppFailure.fromTaskValidationFailure(
+        error: AppFailure.fromValidationFailure(
             state.validationFailure!, translator),
         status: JoinHomeStatus.error,
       ));

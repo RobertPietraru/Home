@@ -44,7 +44,7 @@ class HomeCreationState extends Equatable {
   HomeCreationState copyWith({
     HomeName? name,
     HomeCreationStatus? status,
-    AppFailure? failure = AppFailure.mockForDynamic,
+    AppFailure? failure = AppFailure.mock,
     bool? usesWithSomeoneElse,
     bool? usesForChores,
     bool? usesForShoppingList,
@@ -55,7 +55,7 @@ class HomeCreationState extends Equatable {
       usesForShoppingList: usesForShoppingList ?? this.usesForShoppingList,
       name: name ?? this.name,
       status: status ?? this.status,
-      failure: failure == AppFailure.mockForDynamic ? this.failure : failure,
+      failure: failure == AppFailure.mock ? this.failure : failure,
     );
   }
 }

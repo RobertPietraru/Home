@@ -44,7 +44,7 @@ class HomeCreationCubit extends Cubit<HomeCreationState> {
     if (state.validationFailure != null) {
       emit(state.copyWith(
         status: HomeCreationStatus.error,
-        failure: AppFailure.fromTaskValidationFailure(
+        failure: AppFailure.fromValidationFailure(
             state.validationFailure!, translator),
       ));
       return;

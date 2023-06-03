@@ -45,7 +45,7 @@ class TaskCreationCubit extends Cubit<TaskCreationState> {
   }) async {
     if (state.validationFailure != null) {
       emit(state.copyWith(
-        failure: AppFailure.fromTaskValidationFailure(
+        failure: AppFailure.fromValidationFailure(
             state.validationFailure!, translator),
         status: TaskCreationStatus.idle,
       ));

@@ -22,9 +22,12 @@ class TaskCreationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(trailing: [
-        Icon(type == TaskType.chore
-            ? Icons.cleaning_services
-            : Icons.shopping_bag)
+        Padding(
+          padding: const EdgeInsets.all(12),
+          child: Icon(type == TaskType.chore
+              ? Icons.cleaning_services
+              : Icons.shopping_bag),
+        )
       ]),
       body: BlocProvider(
         create: (context) => TaskCreationCubit(
@@ -47,20 +50,20 @@ class TaskCreationChildScreen extends StatelessWidget {
       {super.key, required this.type, required this.home});
 
   String indicatorTextBasedOnPosition(double position, BuildContext context) {
-    if (position < 0.4) {
+    if (position < 0.3) {
       return context.translator.unimportant;
     }
-    if (position < 0.6) {
+    if (position < 0.8) {
       return context.translator.quiteImportant;
     }
     return context.translator.veryImportant;
   }
 
   Color indicatorColorBasedOnPosition(double position) {
-    if (position < 0.4) {
+    if (position < 0.3) {
       return Colors.green;
     }
-    if (position < 0.6) {
+    if (position < 0.8) {
       return Colors.orange;
     }
     return Colors.red;
@@ -81,6 +84,7 @@ class TaskCreationChildScreen extends StatelessWidget {
               children: [
                 TextInputField(
                   onChanged: context.read<TaskCreationCubit>().titleChanged,
+                  error: state.titleError,
                   hint: context.translator.title,
                   leading: Icons.home,
                 ),
@@ -122,13 +126,23 @@ class TaskCreationChildScreen extends StatelessWidget {
                     )
                   ],
                 ),
-                SfDateRangePicker(
-                  onSelectionChanged: (s) => context
-                      .read<TaskCreationCubit>()
-                      .deadlineChanged(s.value as DateTime),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      context.translator.deadline,
+                      style: theme.subtitleTextStyle,
+                    ),
+                    SfDateRangePicker(
+                      enablePastDates: false,
+                      onSelectionChanged: (s) => context
+                          .read<TaskCreationCubit>()
+                          .deadlineChanged(s.value as DateTime),
+                    ),
+                  ],
                 ),
                 LongButton(
-                  error: state.failure?.message,
+                  error: state.fieldlessError,
                   label: context.translator.create,
                   onPressed: () async {
                     final userState = context.read<AuthBloc>().state;

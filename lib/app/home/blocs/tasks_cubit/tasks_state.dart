@@ -21,12 +21,12 @@ class TasksState extends Equatable {
     List<TaskEntity>? chores,
     List<TaskEntity>? shoppingList,
     TasksStatus? status,
-    AppFailure? error = AppFailure.mockForDynamic,
+    AppFailure? error = AppFailure.mock,
   }) {
     return TasksState(
       chores: chores ?? this.chores,
       shoppingList: shoppingList ?? this.shoppingList,
-      error: error == AppFailure.mockForDynamic ? this.error : error,
+      error: error == AppFailure.mock ? this.error : error,
       status: status ?? this.status,
     );
   }

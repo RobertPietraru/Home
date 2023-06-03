@@ -91,8 +91,7 @@ class _ChoresListViewState extends State<ChoresListView> {
                                     : context.translator.markComplete),
                                 leading: const Icon(Icons.done)),
                             ListTile(
-                              title: Text(context.translator.edit,
-                                  style: TextStyle()),
+                              title: Text(context.translator.edit),
                               leading: const Icon(Icons.edit),
                               onTap: () {
                                 Navigator.pop(modalContext);
@@ -106,7 +105,7 @@ class _ChoresListViewState extends State<ChoresListView> {
                                 Navigator.pop(modalContext);
                               },
                               title: Text(context.translator.delete,
-                                  style: TextStyle(color: Colors.red)),
+                                  style: const TextStyle(color: Colors.red)),
                               leading:
                                   const Icon(Icons.delete, color: Colors.red),
                             ),
