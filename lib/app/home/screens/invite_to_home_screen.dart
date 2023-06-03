@@ -32,6 +32,7 @@ class InviteToHomeScreen extends StatelessWidget {
               children: [
                 LongButton(
                   label: context.translator.inviteYourFamily,
+                  color: theme.companyColor,
                   onPressed: () async {
                     Share.share(homeEntity.id);
                     Navigator.pop(context);
