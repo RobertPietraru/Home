@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:homeapp/app/home/blocs/cubit/homes_cubit.dart';
+import 'package:homeapp/app/home/blocs/homes_cubit/homes_cubit.dart';
 import 'package:homeapp/core/failures/app_failure.dart';
 import 'package:homeapp/core/utils/translator.dart';
 import 'package:household/household.dart';

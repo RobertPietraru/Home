@@ -7,6 +7,7 @@ import 'package:household/household.dart';
 import '../blocs/tasks_cubit/tasks_cubit.dart';
 import '../screens/task_creation_screen.dart';
 import '../widgets/task_widget.dart';
+import 'filter_tasks_bottom_sheet.dart';
 
 class TaskList extends StatefulWidget {
   final HomeEntity home;
@@ -88,7 +89,7 @@ class _TaskListState extends State<TaskList> {
                                                   BorderRadius.circular(20)),
                                         ),
                                       ),
-                                      const FilterTasksDialog(),
+                                      const FilterTasksBottomSheet(),
                                     ],
                                   ));
                         },
@@ -126,52 +127,17 @@ class _TaskListState extends State<TaskList> {
             },
             itemCount: list.length,
             itemBuilder: (context, index) {
-              final entity = list[index];
+              final task = list[index];
               return TaskWidget(
-                task: entity,
+                task: task,
                 onPressed: () => context
                     .read<TasksCubit>()
-                    .toggleTask(entity, context.translator),
+                    .toggleTask(task, context.translator),
                 onLongPress: () {
                   showModalBottomSheet(
                     context: context,
-                    builder: (modalContext) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 16.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ListTile(
-                                onTap: () {
-                                  context
-                                      .read<TasksCubit>()
-                                      .toggleTask(entity, context.translator);
-                                  Navigator.pop(modalContext);
-                                },
-                                title: Text(entity.isCompleted
-                                    ? context.translator.markUncomplete
-                                    : context.translator.markComplete),
-                                leading: const Icon(Icons.done)),
-                            ListTile(
-                              title: Text(context.translator.edit),
-                              leading: const Icon(Icons.edit),
-                              onTap: () => Navigator.pop(modalContext),
-                            ),
-                            ListTile(
-                              onTap: () {
-                                context
-                                    .read<TasksCubit>()
-                                    .deleteTask(entity, context.translator);
-                                Navigator.pop(modalContext);
-                              },
-                              title: Text(context.translator.delete,
-                                  style: const TextStyle(color: Colors.red)),
-                              leading:
-                                  const Icon(Icons.delete, color: Colors.red),
-                            ),
-                          ],
-                        ),
-                      );
+                    builder: (context) {
+                      return TaskOptionsBottomSheet(task: task);
                     },
                   );
                 },
@@ -184,179 +150,45 @@ class _TaskListState extends State<TaskList> {
   }
 }
 
-class FilterTasksDialog extends StatelessWidget {
-  const FilterTasksDialog({
+class TaskOptionsBottomSheet extends StatelessWidget {
+  const TaskOptionsBottomSheet({
     super.key,
+    required this.task,
   });
+
+  final TaskEntity task;
 
   @override
   Widget build(BuildContext context) {
-    final theme = AppTheme.of(context);
     return Padding(
-      padding: theme.standardPadding,
+      padding: const EdgeInsets.only(bottom: 16.0),
       child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Filter", style: theme.titleTextStyle),
-                FilledButton(
-                    onPressed: () {},
-                    child: Text(
-                      "Reset",
-                      style: theme.actionTextStyle,
-                    )),
-              ],
-            ),
-            SizedBox(height: theme.spacing.medium),
-            Text("Sort by: ", style: theme.subtitleTextStyle),
-            SizedBox(height: theme.spacing.small),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SortOption(
-                  isSelected: true,
-                  label: 'Creation date',
-                  onPressed: () {},
-                ),
-                SizedBox(height: theme.spacing.medium),
-                SortOption(
-                  isSelected: false,
-                  label: 'Deadline',
-                  onPressed: () {},
-                ),
-                SizedBox(height: theme.spacing.medium),
-                SortOption(
-                  isSelected: false,
-                  label: 'Importance',
-                  onPressed: () {},
-                ),
-              ],
-            ),
-            SizedBox(height: theme.spacing.medium),
-            Text("Filter by asignee", style: theme.subtitleTextStyle),
-            SizedBox(height: theme.spacing.small),
-            StringDropdownTextField(
-              options: const ['Bob', 'John', 'Mark'],
-              onChanged: (e) {},
-              hint: 'Nobody is selected',
-            ),
-            CheckboxInputField(
-                value: true, title: 'Show completed tasks', onChanged: (e) {}),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text(context.translator.cancel)),
-                SizedBox(width: theme.spacing.small),
-                FilledButton(
-                    onPressed: () {},
-                    child: Text("Apply", style: theme.actionTextStyle)),
-              ],
-            ),
-          ]),
-    );
-  }
-}
-
-class SortOption extends StatelessWidget {
-  final String label;
-  final VoidCallback onPressed;
-  final bool isSelected;
-  const SortOption({
-    super.key,
-    required this.label,
-    required this.onPressed,
-    required this.isSelected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final borderRadius = BorderRadius.circular(20);
-    final theme = AppTheme.of(context);
-    return InkWell(
-      onTap: onPressed,
-      borderRadius: borderRadius,
-      child: Ink(
-          width: 25.widthPercent,
-          decoration: BoxDecoration(
-            borderRadius: borderRadius,
-            color: isSelected ? theme.good : Colors.grey[400],
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+              onTap: () {
+                context.read<TasksCubit>().toggleTask(task, context.translator);
+                Navigator.pop(context);
+              },
+              title: Text(task.isCompleted
+                  ? context.translator.markUncomplete
+                  : context.translator.markComplete),
+              leading: const Icon(Icons.done)),
+          ListTile(
+            title: Text(context.translator.edit),
+            leading: const Icon(Icons.edit),
+            onTap: () => Navigator.pop(context),
           ),
-          padding: const EdgeInsets.symmetric(vertical: 15),
-          child: Center(
-              child: Text(
-            label,
-            style: TextStyle(
-                color: isSelected ? Colors.white : null,
-                fontWeight: FontWeight.bold),
-          ))),
-    );
-  }
-}
-
-class StringDropdownTextField extends StatefulWidget {
-  final List<String> options;
-
-  final Function(String) onChanged;
-  final String hint;
-  final String? error;
-  final IconData? leading;
-  final Color? backgroundColor;
-  final String? initialValue;
-  final TextInputType? keyboardType;
-
-  const StringDropdownTextField({
-    Key? key,
-    required this.options,
-    required this.onChanged,
-    required this.hint,
-    this.error,
-    this.leading,
-    this.backgroundColor,
-    this.initialValue,
-    this.keyboardType,
-  }) : super(key: key);
-
-  @override
-  _StringDropdownTextFieldState createState() =>
-      _StringDropdownTextFieldState();
-}
-
-class _StringDropdownTextFieldState extends State<StringDropdownTextField> {
-  String? selectedValue;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = AppTheme.of(context);
-    return DropdownButtonFormField<String>(
-      value: selectedValue,
-      onChanged: (String? newValue) {
-        setState(() {
-          selectedValue = newValue;
-        });
-        widget.onChanged(newValue!);
-      },
-      items: widget.options.map((String option) {
-        return DropdownMenuItem<String>(
-          value: option,
-          child: Text(option),
-        );
-      }).toList(),
-      decoration: InputDecoration(
-        fillColor:
-            widget.backgroundColor ?? const Color.fromARGB(255, 212, 212, 212),
-        filled: true,
-        hintText: widget.hint,
-        border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide.none),
-        prefixIcon: widget.leading == null ? null : Icon(widget.leading),
-        errorStyle: TextStyle(fontSize: theme.spacing.mediumLarge),
-        errorText: widget.error,
+          ListTile(
+            onTap: () {
+              context.read<TasksCubit>().deleteTask(task, context.translator);
+              Navigator.pop(context);
+            },
+            title: Text(context.translator.delete,
+                style: const TextStyle(color: Colors.red)),
+            leading: const Icon(Icons.delete, color: Colors.red),
+          ),
+        ],
       ),
     );
   }

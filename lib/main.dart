@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:homeapp/app/auth/registration/registration_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:homeapp/app/home/blocs/cubit/homes_cubit.dart';
+import 'package:homeapp/app/home/blocs/homes_cubit/homes_cubit.dart';
 import 'package:homeapp/app/home/widgets/navigation_wrapper.dart';
 import '../core/components/theme/app_theme.dart';
 import '../core/components/theme/app_theme_data.dart';

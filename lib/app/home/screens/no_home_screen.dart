@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:homeapp/app/home/blocs/cubit/homes_cubit.dart';
+import 'package:homeapp/app/home/blocs/homes_cubit/homes_cubit.dart';
 import 'package:homeapp/core/components/buttons/long_button.dart';
 import 'package:homeapp/core/components/custom_app_bar.dart';
 import 'package:homeapp/core/components/theme/app_theme.dart';
