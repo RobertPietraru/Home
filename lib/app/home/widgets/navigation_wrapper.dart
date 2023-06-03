@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homeapp/app/home/blocs/cubit/homes_cubit.dart';
+import 'package:homeapp/app/home/views/task_list.dart';
 import 'package:homeapp/core/components/custom_app_bar.dart';
 import 'package:homeapp/core/utils/translator.dart';
 import 'package:household/household.dart';
@@ -8,9 +9,7 @@ import 'package:household/household.dart';
 import '../../../injection.dart';
 import '../blocs/tasks_cubit/tasks_cubit.dart';
 import '../screens/no_home_screen.dart';
-import '../views/chores_list_view.dart';
 import '../views/drawer_view.dart';
-import '../views/shopping_list_view.dart';
 
 class NavigationWrapper extends StatefulWidget {
   const NavigationWrapper({super.key});
@@ -67,8 +66,14 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
             body: Container(
               color: Colors.white,
               child: [
-                ChoresListView(home: homesState.currentHome),
-                ShoppingListView(home: homesState.currentHome),
+                TaskList(
+                  home: homesState.currentHome,
+                  type: TaskType.chore,
+                ),
+                TaskList(
+                  home: homesState.currentHome,
+                  type: TaskType.shopping,
+                ),
               ][index],
             ),
           ),

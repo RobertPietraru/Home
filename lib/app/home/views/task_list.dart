@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homeapp/core/components/components.dart';
-import 'package:homeapp/core/components/custom_dialog.dart';
-import 'package:homeapp/core/components/theme/app_theme.dart';
 import 'package:homeapp/core/utils/translator.dart';
 import 'package:household/household.dart';
 
@@ -10,35 +8,41 @@ import '../blocs/tasks_cubit/tasks_cubit.dart';
 import '../screens/task_creation_screen.dart';
 import '../widgets/task_widget.dart';
 
-class ChoresListView extends StatefulWidget {
+class TaskList extends StatefulWidget {
   final HomeEntity home;
-  const ChoresListView({
+  final TaskType type;
+  const TaskList({
     Key? key,
     required this.home,
+    required this.type,
   }) : super(key: key);
 
   @override
-  State<ChoresListView> createState() => _ChoresListViewState();
+  State<TaskList> createState() => _TaskListState();
 }
 
-class _ChoresListViewState extends State<ChoresListView> {
+class _TaskListState extends State<TaskList> {
   @override
   Widget build(BuildContext context) {
     final theme = AppTheme.of(context);
+    final errorMessage = widget.type == TaskType.chore
+        ? context.translator.noChores
+        : context.translator.noShoppingList;
+    final title = widget.type == TaskType.chore
+        ? context.translator.chores
+        : context.translator.shoppingList;
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: theme.companyColor,
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(
-            builder: (_) {
-              return BlocProvider.value(
-                value: BlocProvider.of<TasksCubit>(context),
-                child:
-                    TaskCreationScreen(type: TaskType.chore, home: widget.home),
-              );
-            },
-          ));
-        },
+        onPressed: () => Navigator.push(context, MaterialPageRoute(
+          builder: (_) {
+            return BlocProvider.value(
+              value: BlocProvider.of<TasksCubit>(context),
+              child: TaskCreationScreen(type: widget.type, home: widget.home),
+            );
+          },
+        )),
         child: const Icon(Icons.add),
       ),
       body: NestedScrollView(headerSliverBuilder: (context, _) {
@@ -51,7 +55,7 @@ class _ChoresListViewState extends State<ChoresListView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      context.translator.chores,
+                      title,
                       style: TextStyle(
                         color: theme.secondaryColor,
                         fontWeight: FontWeight.w600,
@@ -97,6 +101,8 @@ class _ChoresListViewState extends State<ChoresListView> {
         ];
       }, body: BlocBuilder<TasksCubit, TasksState>(
         builder: (context, state) {
+          final list =
+              widget.type == TaskType.chore ? state.chores : state.shoppingList;
           if (state.status == TasksStatus.loading) {
             return const Center(
               child: CircularProgressIndicator(),
@@ -109,18 +115,18 @@ class _ChoresListViewState extends State<ChoresListView> {
                   style: theme.informationTextStyle.copyWith(color: theme.bad)),
             );
           }
-          if (state.chores.isEmpty) {
+          if (list.isEmpty) {
             return Center(
-              child: Text(context.translator.noChores),
+              child: Text(errorMessage),
             );
           }
           return ListView.separated(
             separatorBuilder: (context, index) {
               return const Divider();
             },
-            itemCount: state.chores.length,
+            itemCount: list.length,
             itemBuilder: (context, index) {
-              final entity = state.chores[index];
+              final entity = list[index];
               return TaskWidget(
                 task: entity,
                 onPressed: () => context
@@ -149,9 +155,7 @@ class _ChoresListViewState extends State<ChoresListView> {
                             ListTile(
                               title: Text(context.translator.edit),
                               leading: const Icon(Icons.edit),
-                              onTap: () {
-                                Navigator.pop(modalContext);
-                              },
+                              onTap: () => Navigator.pop(modalContext),
                             ),
                             ListTile(
                               onTap: () {
@@ -235,7 +239,7 @@ class FilterTasksDialog extends StatelessWidget {
             Text("Filter by asignee", style: theme.subtitleTextStyle),
             SizedBox(height: theme.spacing.small),
             StringDropdownTextField(
-              options: ['Bob', 'John', 'Mark'],
+              options: const ['Bob', 'John', 'Mark'],
               onChanged: (e) {},
               hint: 'Nobody is selected',
             ),
@@ -245,8 +249,8 @@ class FilterTasksDialog extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(
-                    onPressed: () {},
-                    child: Text("Cancel", style: theme.actionTextStyle)),
+                    onPressed: () => Navigator.pop(context),
+                    child: Text(context.translator.cancel)),
                 SizedBox(width: theme.spacing.small),
                 FilledButton(
                     onPressed: () {},

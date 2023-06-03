@@ -90,7 +90,8 @@
   "deadline": "Deadline",
 
   "provideTaskTitle": "You have to provide a task title",
-  "chores": "Chores"
+  "chores": "Chores",
+  "shoppingList": "Shopping list"
   
 }
 
