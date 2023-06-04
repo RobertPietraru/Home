@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:homeapp/core/components/theme/app_theme.dart';
 
-class DropdownPickerInputField extends StatefulWidget {
-  final List<String> options;
-  final Function(String) onChanged;
+class DropdownPickerInputField<T> extends StatefulWidget {
+  final List<T> options;
+  final Function(T?) onChanged;
+  final Widget Function(T option) getChild;
   final String hint;
   final String? error;
   final IconData? leadingIcon;
   final Color? backgroundColor;
-  final String? initialValue;
+  final T? initialValue;
   final TextInputType? keyboardType;
 
   const DropdownPickerInputField({
@@ -21,31 +22,40 @@ class DropdownPickerInputField extends StatefulWidget {
     this.backgroundColor,
     this.initialValue,
     this.keyboardType,
+    required this.getChild,
   }) : super(key: key);
 
   @override
-  State<DropdownPickerInputField> createState() =>
-      _DropdownPickerInputFieldState();
+  State<DropdownPickerInputField<T>> createState() =>
+      _DropdownPickerInputFieldState<T>();
 }
 
-class _DropdownPickerInputFieldState extends State<DropdownPickerInputField> {
-  String? selectedValue;
+class _DropdownPickerInputFieldState<T>
+    extends State<DropdownPickerInputField<T>> {
+  T? selectedValue;
+  @override
+  void initState() {
+    if (widget.options.contains(widget.initialValue)) {
+      selectedValue = widget.initialValue;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = AppTheme.of(context);
-    return DropdownButtonFormField<String>(
+    return DropdownButtonFormField<T>(
       value: selectedValue,
-      onChanged: (String? newValue) {
+      onChanged: (T? newValue) {
         setState(() {
           selectedValue = newValue;
         });
-        widget.onChanged(newValue!);
+        widget.onChanged(newValue);
       },
-      items: widget.options.map((String option) {
-        return DropdownMenuItem<String>(
+      items: widget.options.map((T option) {
+        return DropdownMenuItem<T>(
           value: option,
-          child: Text(option),
+          child: widget.getChild(option),
         );
       }).toList(),
       decoration: InputDecoration(

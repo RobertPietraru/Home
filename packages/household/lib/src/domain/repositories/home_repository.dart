@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../entities/home_entity.dart';
+import 'package:equatable/equatable.dart';
 import '../entities/tasks_entities.dart';
 import '../failures/task_failure.dart';
 
@@ -133,8 +133,27 @@ class DeleteTaskResponse {
 class GetTasksParams {
   final String homeId;
   final TaskType type;
+  final TaskFilters? filters;
 
-  const GetTasksParams({required this.homeId, required this.type});
+  const GetTasksParams(
+      {required this.homeId, required this.type, this.filters});
+}
+
+enum TaskSortFilter { creationDate, deadline, importance }
+
+class TaskFilters extends Equatable {
+  final List<TaskSortFilter> sortFilters;
+  final String? assigneeId;
+  final bool showCompletedTasks;
+
+  const TaskFilters({
+    required this.sortFilters,
+    this.assigneeId,
+    required this.showCompletedTasks,
+  });
+
+  @override
+  List<Object?> get props => [assigneeId, showCompletedTasks, ...sortFilters];
 }
 
 class GetTasksResponse {

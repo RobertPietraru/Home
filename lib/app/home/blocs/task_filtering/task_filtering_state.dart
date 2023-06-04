@@ -1,35 +1,46 @@
 part of 'task_filtering_cubit.dart';
 
-enum FilterSortTarget { creationDate, deadline, importance }
-
 class TaskFilteringState extends Equatable {
-  final List<FilterSortTarget> sortByFields;
+  final List<TaskSortFilter> sortFilters;
   final UserEntity? selectedAsignee;
   final bool showCompletedTasks;
 
+  final TaskFilteringState? lastUsedState;
+
   const TaskFilteringState({
-    required this.sortByFields,
+    this.lastUsedState,
+    required this.sortFilters,
     this.selectedAsignee,
     required this.showCompletedTasks,
   });
 
   factory TaskFilteringState.initial() {
     return const TaskFilteringState(
-      sortByFields: [],
+      sortFilters: [],
       showCompletedTasks: false,
       selectedAsignee: null,
+      lastUsedState: null,
+    );
+  }
+  TaskFilters get filter {
+    return TaskFilters(
+      sortFilters: sortFilters,
+      showCompletedTasks: showCompletedTasks,
+      assigneeId: selectedAsignee?.id,
     );
   }
 
   bool get canReset => TaskFilteringState.initial() != this;
 
   TaskFilteringState copyWith({
-    List<FilterSortTarget>? sortByFields,
+    List<TaskSortFilter>? sortFilters,
     UserEntity? selectedAsignee = UserEntity.mock,
     bool? showCompletedTasks,
+    TaskFilteringState? lastUsedState,
   }) {
     return TaskFilteringState(
-      sortByFields: sortByFields ?? this.sortByFields,
+      lastUsedState: lastUsedState ?? this.lastUsedState,
+      sortFilters: sortFilters ?? this.sortFilters,
       showCompletedTasks: showCompletedTasks ?? this.showCompletedTasks,
       selectedAsignee: selectedAsignee == UserEntity.mock
           ? this.selectedAsignee
@@ -39,5 +50,5 @@ class TaskFilteringState extends Equatable {
 
   @override
   List<Object?> get props =>
-      [showCompletedTasks, selectedAsignee, ...sortByFields];
+      [showCompletedTasks, selectedAsignee, ...sortFilters];
 }

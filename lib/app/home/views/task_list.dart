@@ -1,5 +1,7 @@
+import 'package:auth/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:homeapp/app/home/blocs/task_filtering/task_filtering_cubit.dart';
 import 'package:homeapp/core/components/components.dart';
 import 'package:homeapp/core/utils/translator.dart';
 import 'package:household/household.dart';
@@ -9,7 +11,7 @@ import '../screens/task_creation_screen.dart';
 import '../widgets/task_widget.dart';
 import 'filter_tasks_bottom_sheet.dart';
 
-class TaskList extends StatefulWidget {
+class TaskList extends StatelessWidget {
   final HomeEntity home;
   final TaskType type;
   const TaskList({
@@ -19,17 +21,12 @@ class TaskList extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<TaskList> createState() => _TaskListState();
-}
-
-class _TaskListState extends State<TaskList> {
-  @override
   Widget build(BuildContext context) {
     final theme = AppTheme.of(context);
-    final errorMessage = widget.type == TaskType.chore
+    final errorMessage = type == TaskType.chore
         ? context.translator.noChores
         : context.translator.noShoppingList;
-    final title = widget.type == TaskType.chore
+    final title = type == TaskType.chore
         ? context.translator.chores
         : context.translator.shoppingList;
 
@@ -40,7 +37,7 @@ class _TaskListState extends State<TaskList> {
           builder: (_) {
             return BlocProvider.value(
               value: BlocProvider.of<TasksCubit>(context),
-              child: TaskCreationScreen(type: widget.type, home: widget.home),
+              child: TaskCreationScreen(type: type, home: home),
             );
           },
         )),
@@ -75,7 +72,7 @@ class _TaskListState extends State<TaskList> {
                                 bottomLeft: Radius.zero,
                                 bottomRight: Radius.zero,
                               )),
-                              builder: (context) => Column(
+                              builder: (_) => Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       SizedBox(height: theme.spacing.medium),
@@ -89,7 +86,19 @@ class _TaskListState extends State<TaskList> {
                                                   BorderRadius.circular(20)),
                                         ),
                                       ),
-                                      const FilterTasksBottomSheet(),
+                                      BlocProvider.value(
+                                        value:
+                                            context.read<TaskFilteringCubit>()
+                                              ..makeCheckpoint(),
+                                        child: FilterTasksBottomSheet(
+                                          home: home,
+                                          type: type,
+                                          assignees: const [
+                                            UserEntity(id: 'id', name: 'John'),
+                                            UserEntity(id: 'id2', name: 'Bob'),
+                                          ],
+                                        ),
+                                      ),
                                     ],
                                   ));
                         },
@@ -103,7 +112,7 @@ class _TaskListState extends State<TaskList> {
       }, body: BlocBuilder<TasksCubit, TasksState>(
         builder: (context, state) {
           final list =
-              widget.type == TaskType.chore ? state.chores : state.shoppingList;
+              type == TaskType.chore ? state.chores : state.shoppingList;
           if (state.status == TasksStatus.loading) {
             return const Center(
               child: CircularProgressIndicator(),
