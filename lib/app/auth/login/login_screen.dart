@@ -73,8 +73,7 @@ class _LoginView extends StatelessWidget {
                             context.read<LoginCubit>().login(context),
                         label: context.translator.login,
                         color: theme.companyColor,
-                        error: state.failure?.fieldWithIssue ==
-                                AuthFieldWithIssue.none
+                        error: state.failure?.fieldWithIssue == null
                             ? state.failure?.message
                             : null,
                         isLoading: state.isLoading),

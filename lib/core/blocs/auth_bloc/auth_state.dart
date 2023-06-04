@@ -1,14 +1,5 @@
 part of 'auth_bloc.dart';
 
-enum AuthFieldWithIssue {
-  email,
-  password,
-  confirmedPassword,
-  name,
-  other,
-  none
-}
-
 abstract class AuthState extends Equatable {
   const AuthState();
 

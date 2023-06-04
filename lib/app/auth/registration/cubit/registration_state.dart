@@ -31,21 +31,21 @@ class RegistrationState extends Equatable {
 
   String? emailFailure(BuildContext context) {
     if (status == RegistrationStatus.init) return null;
-    return (failure?.fieldWithIssue == AuthFieldWithIssue.email
+    return (failure?.fieldWithIssue == FieldWithIssue.authEmail
         ? failure?.message
         : null);
   }
 
   String? passwordFailure(BuildContext context) {
     if (status == RegistrationStatus.init) return null;
-    return (failure?.fieldWithIssue == AuthFieldWithIssue.password
+    return (failure?.fieldWithIssue == FieldWithIssue.authPassword
         ? failure?.message
         : null);
   }
 
   String? confirmPasswordFailure(BuildContext context) {
     if (status == RegistrationStatus.init) return null;
-    return (failure?.fieldWithIssue == AuthFieldWithIssue.confirmedPassword
+    return (failure?.fieldWithIssue == FieldWithIssue.authConfirmationPassword
         ? failure?.message
         : null);
   }
