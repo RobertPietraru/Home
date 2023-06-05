@@ -3,29 +3,29 @@ part of 'tasks_cubit.dart';
 enum TasksStatus { initial, loading, loaded, error }
 
 class TasksState extends Equatable {
-  final List<TaskEntity> chores;
-  final List<TaskEntity> shoppingList;
+  final List<TaskEntity> tasks;
   final TasksStatus status;
   final AppFailure? error;
+  final TaskFilters filters;
   const TasksState({
-    required this.chores,
-    required this.shoppingList,
+    required this.filters,
+    required this.tasks,
     this.status = TasksStatus.initial,
     this.error,
   });
 
   @override
-  List<Object?> get props => [chores, shoppingList, status, error];
+  List<Object?> get props => [...tasks, status, error, filters];
 
   TasksState copyWith({
-    List<TaskEntity>? chores,
-    List<TaskEntity>? shoppingList,
+    List<TaskEntity>? tasks,
     TasksStatus? status,
     AppFailure? error = AppFailure.mock,
+    TaskFilters? filters,
   }) {
     return TasksState(
-      chores: chores ?? this.chores,
-      shoppingList: shoppingList ?? this.shoppingList,
+      filters: filters ?? this.filters,
+      tasks: tasks ?? this.tasks,
       error: error == AppFailure.mock ? this.error : error,
       status: status ?? this.status,
     );

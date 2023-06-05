@@ -50,15 +50,11 @@ class TaskFilteringCubit extends Cubit<TaskFilteringState> {
     emit(state.copyWith(showCompletedTasks: showCompletedTasks));
   }
 
-  void selectAssignee(UserEntity? assignee) {
-    emit(state.copyWith(selectedAsignee: assignee));
-  }
+  // void selectAssignee(UserEntity? assignee) {
+  //   emit(state.copyWith(selectedAsignee: assignee));
+  // }
 
-  void apply(TaskType type, HomeEntity home, Translator translator) {
-    if (type == TaskType.chore) {
-      tasksCubit.getChores(home: home, translator: translator);
-    } else {
-      tasksCubit.getShoppingList(home: home, translator: translator);
-    }
+  void apply(Translator translator) {
+    tasksCubit.updateFilters(state.filter, translator);
   }
 }

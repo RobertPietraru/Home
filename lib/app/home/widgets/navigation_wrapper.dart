@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homeapp/app/home/blocs/homes_cubit/homes_cubit.dart';
+import 'package:homeapp/app/home/blocs/task_filtering/task_filtering_cubit.dart';
 import 'package:homeapp/app/home/views/task_list.dart';
 import 'package:homeapp/core/components/custom_app_bar.dart';
 import 'package:homeapp/core/utils/translator.dart';
@@ -36,10 +37,23 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
             child: const NoHomeScreen(),
           );
         }
-        return BlocProvider(
-          create: (context) => TasksCubit(
-            locator(),
-          )..getChores(home: homesState.currentHome, translator: translator),
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              lazy: false,
+              create: (context) {
+                return TasksCubit(locator(),
+                    home: homesState.currentHome, type: TaskType.chore)
+                  ..getTasks(
+                      home: homesState.currentHome, translator: translator);
+              },
+            ),
+            BlocProvider(
+              create: (context) => TaskFilteringCubit(
+                tasksCubit: context.read<TasksCubit>(),
+              ),
+            ),
+          ],
           child: Scaffold(
             appBar: CustomAppBar(
               leading: Builder(builder: (context) {
@@ -57,25 +71,16 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
                   index: index,
                   onPressed: (i) {
                     setState(() => index = i);
-                    context.read<TasksCubit>().getTasksForType(
-                        homesState.currentHome,
-                        index == 0 ? TaskType.chore : TaskType.shopping,
-                        context.translator);
+                    context
+                        .read<TasksCubit>()
+                        .changeType(TaskType.values[index], translator);
+                    context.read<TaskFilteringCubit>().reset();
                   });
             }),
-            body: Container(
-              color: Colors.white,
-              child: [
-                TaskList(
-                  home: homesState.currentHome,
-                  type: TaskType.chore,
-                ),
-                TaskList(
-                  home: homesState.currentHome,
-                  type: TaskType.shopping,
-                ),
-              ][index],
-            ),
+            body: const [
+              TaskList(type: TaskType.chore),
+              TaskList(type: TaskType.shopping),
+            ][index],
           ),
         );
       },

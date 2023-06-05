@@ -22,6 +22,7 @@ class TaskFilteringState extends Equatable {
       lastUsedState: null,
     );
   }
+
   TaskFilters get filter {
     return TaskFilters(
       sortFilters: sortFilters,
@@ -31,6 +32,7 @@ class TaskFilteringState extends Equatable {
   }
 
   bool get canReset => TaskFilteringState.initial() != this;
+  bool get isFiltered => TaskFilteringState.initial() != this;
 
   TaskFilteringState copyWith({
     List<TaskSortFilter>? sortFilters,

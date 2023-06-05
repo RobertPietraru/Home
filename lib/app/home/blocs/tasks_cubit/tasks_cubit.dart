@@ -9,65 +9,71 @@ part 'tasks_state.dart';
 
 class TasksCubit extends Cubit<TasksState> {
   final HomeRepository homeRepository;
+  final HomeEntity home;
+  TaskType type;
 
   TasksCubit(
-    this.homeRepository,
-  ) : super(const TasksState(chores: [], shoppingList: []));
+    this.homeRepository, {
+    required this.type,
+    required this.home,
+  }) : super(const TasksState(
+            tasks: [],
+            filters: TaskFilters(sortFilters: [], showCompletedTasks: false)));
 
-  Future<void> getChores(
-      {required HomeEntity home, required Translator translator}) async {
+  void changeType(TaskType newType, Translator translator) {
+    type = newType;
+    getTasks(home: home, translator: translator);
+  }
+
+  Future<void> updateFilters(TaskFilters filters, Translator translator) async {
+    emit(state.copyWith(filters: filters));
+    await getTasks(home: home, translator: translator);
+  }
+
+  Future<void> getTasks({
+    required HomeEntity home,
+    required Translator translator,
+  }) async {
     emit(state.copyWith(status: TasksStatus.loading));
 
-    final choresResponse = await homeRepository
-        .getTasks(GetTasksParams(homeId: home.id, type: TaskType.chore));
+    final choresResponse = await homeRepository.getTasks(
+        GetTasksParams(homeId: home.id, type: type, filters: state.filters));
 
     choresResponse.fold((l) {
       emit(state.copyWith(
           error: AppFailure.fromTaskFailure(l, translator),
           status: TasksStatus.error));
     }, (r) {
-      emit(state.copyWith(chores: r.tasks, status: TasksStatus.loaded));
+      emit(state.copyWith(
+        tasks: r.tasks,
+        error: null,
+        status: TasksStatus.loaded,
+      ));
     });
   }
 
   Future<void> toggleTask(TaskEntity taskEntity, Translator translator) async {
-    final indexInChores = state.chores.indexOf(taskEntity);
-    final indexInShoppingList = state.shoppingList.indexOf(taskEntity);
+    final index = state.tasks.indexOf(taskEntity);
 
-    late final TaskEntity? modifiedEntity;
+    final TaskEntity? modifiedEntity = taskEntity.isCompleted
+        ? await uncompleteTask(taskEntity, translator)
+        : await completeTask(taskEntity, translator);
     // emit(state.copyWith(status: TasksStatus.loading));
 
-    if (taskEntity.isCompleted) {
-      modifiedEntity = await uncompleteTask(taskEntity, translator);
-    } else {
-      modifiedEntity = await completeTask(taskEntity, translator);
-    }
+    if (modifiedEntity == null) return;
 
-    if (modifiedEntity == null) {
-      return;
-    }
-
-    if (modifiedEntity.type == TaskType.shopping) {
-      final newList = state.shoppingList.toList();
-      newList.removeAt(indexInShoppingList);
-      newList.insert(indexInShoppingList, modifiedEntity);
-      emit(state.copyWith(
-          shoppingList: newList, error: null, status: TasksStatus.loaded));
-    } else {
-      final newList = state.chores.toList();
-      newList.removeAt(indexInChores);
-      newList.insert(indexInChores, modifiedEntity);
-      emit(state.copyWith(
-          chores: newList, error: null, status: TasksStatus.loaded));
-    }
+    final newList = state.tasks.toList();
+    newList[index] = modifiedEntity;
+    emit(state.copyWith(
+        tasks: newList, error: null, status: TasksStatus.loaded));
   }
 
   Future<TaskEntity?> completeTask(
-      TaskEntity taskEntity, Translator translator) async {
+      TaskEntity task, Translator translator) async {
     // emit(state.copyWith(status: TasksStatus.loading));
 
     final response =
-        await homeRepository.completeTask(CompleteTaskParams(task: taskEntity));
+        await homeRepository.completeTask(CompleteTaskParams(task: task));
 
     return response.fold((l) {
       emit(state.copyWith(
@@ -80,11 +86,11 @@ class TasksCubit extends Cubit<TasksState> {
   }
 
   Future<TaskEntity?> uncompleteTask(
-      TaskEntity taskEntity, Translator translator) async {
+      TaskEntity task, Translator translator) async {
     // emit(state.copyWith(status: TasksStatus.loading));
 
-    final response = await homeRepository
-        .uncompleteTask(UncompleteTaskParams(task: taskEntity));
+    final response =
+        await homeRepository.uncompleteTask(UncompleteTaskParams(task: task));
 
     return response.fold((l) {
       emit(state.copyWith(
@@ -96,37 +102,8 @@ class TasksCubit extends Cubit<TasksState> {
     });
   }
 
-  Future<void> getShoppingList(
-      {required HomeEntity home, required Translator translator}) async {
-    emit(state.copyWith(status: TasksStatus.loading));
-
-    final choresResponse = await homeRepository
-        .getTasks(GetTasksParams(homeId: home.id, type: TaskType.shopping));
-
-    choresResponse.fold((l) {
-      emit(state.copyWith(
-          error: AppFailure.fromTaskFailure(l, translator),
-          status: TasksStatus.error));
-    }, (r) {
-      emit(state.copyWith(shoppingList: r.tasks, status: TasksStatus.loaded));
-    });
-  }
-
-  void addTask(TaskEntity taskEntity) {
-    if (taskEntity.type == TaskType.chore) {
-      emit(state.copyWith(chores: [taskEntity, ...state.chores]));
-    } else {
-      emit(state.copyWith(shoppingList: [taskEntity, ...state.shoppingList]));
-    }
-  }
-
-  Future<void> getTasksForType(
-      HomeEntity home, TaskType type, Translator translator) async {
-    if (type == TaskType.chore) {
-      await getChores(home: home, translator: translator);
-    } else {
-      await getShoppingList(home: home, translator: translator);
-    }
+  void addTaskToList(TaskEntity taskEntity) {
+    emit(state.copyWith(tasks: [taskEntity, ...state.tasks]));
   }
 
   Future<void> deleteTask(TaskEntity entity, Translator translator) async {
@@ -135,21 +112,15 @@ class TasksCubit extends Cubit<TasksState> {
 
     response.fold((l) {
       emit(state.copyWith(
-          error: AppFailure.fromTaskFailure(l, translator),
-          status: TasksStatus.error));
+        error: AppFailure.fromTaskFailure(l, translator),
+        status: TasksStatus.error,
+      ));
       return;
     }, (r) {
-      if (entity.type == TaskType.chore) {
-        final list = state.chores.toList();
-        list.remove(entity);
-        emit(state.copyWith(
-            chores: list, error: null, status: TasksStatus.loaded));
-      } else {
-        final list = state.shoppingList.toList();
-        list.remove(entity);
-        emit(state.copyWith(
-            shoppingList: list, error: null, status: TasksStatus.loaded));
-      }
+      final list = state.tasks.toList();
+      list.remove(entity);
+      emit(
+          state.copyWith(tasks: list, error: null, status: TasksStatus.loaded));
     });
   }
 }

@@ -83,7 +83,8 @@ class HomeFirebaseDataSourceIMPL implements HomeRemoteDataSource {
             .get())
         .docs;
     return GetHomesResponse(
-        homes: documents.map((e) => HomeDto.fromSnapshot(e).toEntity()).toList());
+        homes:
+            documents.map((e) => HomeDto.fromSnapshot(e).toEntity()).toList());
   }
 
   @override
@@ -110,7 +111,36 @@ class HomeFirebaseDataSourceIMPL implements HomeRemoteDataSource {
 
   @override
   Future<GetTasksResponse> getTasks(GetTasksParams params) async {
-    late final collection = _db.getListForHome(params.homeId, params.type);
+    Query<Map<String, dynamic>> collection =
+        _db.getListForHome(params.homeId, params.type);
+
+    if (params.filters != null) {
+      final filters = params.filters!;
+      int count = 0;
+      if (filters.sortFilters.contains(TaskSortFilter.creationDate)) {
+        collection =
+            collection.orderBy(TaskDto.creationDateField, descending: true);
+        count++;
+      }
+      if (filters.sortFilters.contains(TaskSortFilter.deadline)) {
+        collection =
+            collection.orderBy(TaskDto.deadlineField, descending: false);
+        count++;
+      }
+      if (count != 2 &&
+          filters.sortFilters.contains(TaskSortFilter.importance)) {
+        collection =
+            collection.orderBy(TaskDto.importanceField, descending: true);
+      }
+
+      if (!filters.showCompletedTasks) {
+        collection =
+            collection.where(TaskDto.isCompletedField, isEqualTo: false);
+      }
+      if (filters.assigneeId != null) {
+        //TODO: implement asignee based sorting
+      }
+    }
 
     final documents = (await collection.get()).docs;
     return GetTasksResponse(

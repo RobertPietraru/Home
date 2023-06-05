@@ -1,4 +1,3 @@
-import 'package:auth/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homeapp/app/home/blocs/task_filtering/task_filtering_cubit.dart';
@@ -12,35 +11,40 @@ import '../widgets/task_widget.dart';
 import 'filter_tasks_bottom_sheet.dart';
 
 class TaskList extends StatelessWidget {
-  final HomeEntity home;
   final TaskType type;
   const TaskList({
     Key? key,
-    required this.home,
     required this.type,
   }) : super(key: key);
+
+  String getErrorMessage(Translator translator) {
+    return type == TaskType.chore
+        ? translator.noChores
+        : translator.noShoppingList;
+  }
+
+  String getTitle(Translator translator) {
+    return type == TaskType.chore ? translator.chores : translator.shoppingList;
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = AppTheme.of(context);
-    final errorMessage = type == TaskType.chore
-        ? context.translator.noChores
-        : context.translator.noShoppingList;
-    final title = type == TaskType.chore
-        ? context.translator.chores
-        : context.translator.shoppingList;
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: theme.companyColor,
-        onPressed: () => Navigator.push(context, MaterialPageRoute(
-          builder: (_) {
-            return BlocProvider.value(
-              value: BlocProvider.of<TasksCubit>(context),
-              child: TaskCreationScreen(type: type, home: home),
-            );
-          },
-        )),
+        onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => BlocProvider.value(
+                value: context.read<TasksCubit>(),
+                child: TaskCreationScreen(
+                  home: context.read<TasksCubit>().home,
+                  type: type,
+                ),
+              ),
+            )),
         child: const Icon(Icons.add),
       ),
       body: NestedScrollView(headerSliverBuilder: (context, _) {
@@ -53,56 +57,70 @@ class TaskList extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      title,
+                      getTitle(context.translator),
                       style: TextStyle(
                         color: theme.secondaryColor,
                         fontWeight: FontWeight.w600,
                         fontSize: theme.spacing.large,
                       ),
                     ),
-                    IconButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: () {
-                          showModalBottomSheet(
-                              context: context,
-                              isDismissible: true,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.circular(20).copyWith(
-                                bottomLeft: Radius.zero,
-                                bottomRight: Radius.zero,
-                              )),
-                              builder: (_) => Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      SizedBox(height: theme.spacing.medium),
-                                      Center(
-                                        child: Container(
-                                          width: 30,
-                                          height: 5,
-                                          decoration: BoxDecoration(
-                                              color: Colors.black,
-                                              borderRadius:
-                                                  BorderRadius.circular(20)),
-                                        ),
-                                      ),
-                                      BlocProvider.value(
-                                        value:
-                                            context.read<TaskFilteringCubit>()
-                                              ..makeCheckpoint(),
-                                        child: FilterTasksBottomSheet(
-                                          home: home,
-                                          type: type,
-                                          assignees: const [
-                                            UserEntity(id: 'id', name: 'John'),
-                                            UserEntity(id: 'id2', name: 'Bob'),
+                    BlocBuilder<TaskFilteringCubit, TaskFilteringState>(
+                      builder: (context, state) {
+                        return Container(
+                          decoration: BoxDecoration(
+                              color:
+                                  state.isFiltered ? theme.companyColor : null,
+                              shape: BoxShape.circle),
+                          child: IconButton(
+                              padding: EdgeInsets.zero,
+                              onPressed: () {
+                                showModalBottomSheet(
+                                    context: context,
+                                    isDismissible: true,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20).copyWith(
+                                      bottomLeft: Radius.zero,
+                                      bottomRight: Radius.zero,
+                                    )),
+                                    builder: (_) => Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            SizedBox(
+                                                height: theme.spacing.medium),
+                                            Center(
+                                              child: Container(
+                                                width: 30,
+                                                height: 5,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.black,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20)),
+                                              ),
+                                            ),
+                                            BlocProvider.value(
+                                              value: context
+                                                  .read<TaskFilteringCubit>()
+                                                ..makeCheckpoint(),
+                                              child: FilterTasksBottomSheet(
+                                                  home: context
+                                                      .read<TasksCubit>()
+                                                      .home,
+                                                  type: type),
+                                            ),
                                           ],
-                                        ),
-                                      ),
-                                    ],
-                                  ));
-                        },
-                        icon: const Icon(Icons.sort))
+                                        ));
+                              },
+                              icon: Icon(
+                                Icons.sort,
+                                color: state.isFiltered
+                                    ? Colors.white
+                                    : Colors.black,
+                              )),
+                        );
+                      },
+                    )
                   ],
                 ),
               ),
@@ -111,8 +129,6 @@ class TaskList extends StatelessWidget {
         ];
       }, body: BlocBuilder<TasksCubit, TasksState>(
         builder: (context, state) {
-          final list =
-              type == TaskType.chore ? state.chores : state.shoppingList;
           if (state.status == TasksStatus.loading) {
             return const Center(
               child: CircularProgressIndicator(),
@@ -125,18 +141,18 @@ class TaskList extends StatelessWidget {
                   style: theme.informationTextStyle.copyWith(color: theme.bad)),
             );
           }
-          if (list.isEmpty) {
+          if (state.tasks.isEmpty) {
             return Center(
-              child: Text(errorMessage),
+              child: Text(getErrorMessage(context.translator)),
             );
           }
           return ListView.separated(
             separatorBuilder: (context, index) {
               return const Divider();
             },
-            itemCount: list.length,
+            itemCount: state.tasks.length,
             itemBuilder: (context, index) {
-              final task = list[index];
+              final task = state.tasks[index];
               return TaskWidget(
                 task: task,
                 onPressed: () => context
@@ -145,8 +161,11 @@ class TaskList extends StatelessWidget {
                 onLongPress: () {
                   showModalBottomSheet(
                     context: context,
-                    builder: (context) {
-                      return TaskOptionsBottomSheet(task: task);
+                    builder: (_) {
+                      return BlocProvider.value(
+                        value: context.read<TasksCubit>(),
+                        child: TaskOptionsBottomSheet(task: task),
+                      );
                     },
                   );
                 },

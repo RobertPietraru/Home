@@ -69,7 +69,7 @@ class TaskCreationCubit extends Cubit<TaskCreationState> {
         status: TaskCreationStatus.error,
       ));
     }, (r) {
-      tasksCubit.addTask(r.task);
+      tasksCubit.addTaskToList(r.task);
       emit(state.copyWith(
         status: TaskCreationStatus.created,
         failure: null,

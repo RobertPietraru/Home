@@ -1,4 +1,3 @@
-import 'package:auth/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homeapp/app/home/blocs/task_filtering/task_filtering_cubit.dart';
@@ -8,14 +7,10 @@ import 'package:household/household.dart';
 import '../../../core/components/components.dart';
 
 class FilterTasksBottomSheet extends StatelessWidget {
-  final List<UserEntity> assignees;
   final HomeEntity home;
   final TaskType type;
   const FilterTasksBottomSheet(
-      {super.key,
-      required this.assignees,
-      required this.home,
-      required this.type});
+      {super.key, required this.home, required this.type});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +29,10 @@ class FilterTasksBottomSheet extends StatelessWidget {
                     Text("Filter", style: theme.titleTextStyle),
                     FilledButton(
                         onPressed: state.canReset
-                            ? context.read<TaskFilteringCubit>().reset
+                            ? () {
+                                Navigator.pop(context);
+                                context.read<TaskFilteringCubit>().reset();
+                              }
                             : null,
                         child: Text(
                           "Reset",
@@ -50,8 +48,8 @@ class FilterTasksBottomSheet extends StatelessWidget {
                   children: [
                     SortOption(
                       label: 'Creation date',
-                      isSelected:
-                          state.sortFilters.contains(TaskSortFilter.creationDate),
+                      isSelected: state.sortFilters
+                          .contains(TaskSortFilter.creationDate),
                       onPressed: () => context
                           .read<TaskFilteringCubit>()
                           .toggleSortFilter(TaskSortFilter.creationDate),
@@ -77,17 +75,16 @@ class FilterTasksBottomSheet extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: theme.spacing.medium),
-                Text("Filter by asignee", style: theme.subtitleTextStyle),
-                SizedBox(height: theme.spacing.small),
-                DropdownPickerInputField(
-                  options: assignees,
-                  leadingIcon: Icons.person,
-                  onChanged: (e) =>
-                      context.read<TaskFilteringCubit>().selectAssignee(e),
-                  hint: 'Nobody is selected',
-                  initialValue: state.selectedAsignee,
-                  getChild: (option) => Text(option.name),
-                ),
+                // Text("Filter by asignee", style: theme.subtitleTextStyle),
+                // SizedBox(height: theme.spacing.small),
+                // DropdownPickerInputField(
+                //   options: assignees,
+                //   leadingIcon: Icons.person,
+                //   onChanged: (e) => context.read<TaskFilteringCubit>().selectAssignee(e),
+                //   hint: 'Nobody is selected',
+                //   initialValue: state.selectedAsignee,
+                //   getChild: (option) => Text(option.name),
+                // ),
                 CheckboxInputField(
                     value: state.showCompletedTasks,
                     title: 'Show completed tasks',
@@ -111,7 +108,7 @@ class FilterTasksBottomSheet extends StatelessWidget {
                         onPressed: () {
                           context
                               .read<TaskFilteringCubit>()
-                              .apply(type, home, context.translator);
+                              .apply(context.translator);
                           Navigator.pop(context);
                         },
                         child: Text("Apply", style: theme.actionTextStyle)),
