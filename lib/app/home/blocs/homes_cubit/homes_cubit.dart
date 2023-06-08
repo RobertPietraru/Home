@@ -73,6 +73,8 @@ class HomesCubit extends Cubit<HomesState> {
     });
   }
 
+  
+
   void addHome({required HomeEntity homeEntity}) {
     final homes = state.homes.toList();
     homes.add(homeEntity);

@@ -91,7 +91,15 @@
 
   "provideTaskTitle": "You have to provide a task title",
   "chores": "Chores",
-  "shoppingList": "Shopping list"
+  "shoppingList": "Shopping list",
+  "filter": "Filter",
+  "sortBy": "Sort by:" ,
+  
+  "creationDate": "Creation date",
+  "apply": "Apply",
+  "showCompletedTasks" : "Show completed tasks",
+
+  "reset": "Reset"
   
 }
 

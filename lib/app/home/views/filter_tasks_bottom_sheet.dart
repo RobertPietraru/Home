@@ -26,7 +26,7 @@ class FilterTasksBottomSheet extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Filter", style: theme.titleTextStyle),
+                    Text(context.translator.filter, style: theme.titleTextStyle),
                     FilledButton(
                         onPressed: state.canReset
                             ? () {
@@ -35,19 +35,19 @@ class FilterTasksBottomSheet extends StatelessWidget {
                               }
                             : null,
                         child: Text(
-                          "Reset",
+                          context.translator.reset,
                           style: theme.actionTextStyle,
                         )),
                   ],
                 ),
                 SizedBox(height: theme.spacing.medium),
-                Text("Sort by: ", style: theme.subtitleTextStyle),
+                Text(context.translator.sortBy, style: theme.subtitleTextStyle),
                 SizedBox(height: theme.spacing.small),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SortOption(
-                      label: 'Creation date',
+                      label: context.translator.creationDate,
                       isSelected: state.sortFilters
                           .contains(TaskSortFilter.creationDate),
                       onPressed: () => context
@@ -58,7 +58,7 @@ class FilterTasksBottomSheet extends StatelessWidget {
                     SortOption(
                       isSelected:
                           state.sortFilters.contains(TaskSortFilter.deadline),
-                      label: 'Deadline',
+                      label: context.translator.deadline,
                       onPressed: () => context
                           .read<TaskFilteringCubit>()
                           .toggleSortFilter(TaskSortFilter.deadline),
@@ -67,7 +67,7 @@ class FilterTasksBottomSheet extends StatelessWidget {
                     SortOption(
                       isSelected:
                           state.sortFilters.contains(TaskSortFilter.importance),
-                      label: 'Importance',
+                      label: context.translator.importance,
                       onPressed: () => context
                           .read<TaskFilteringCubit>()
                           .toggleSortFilter(TaskSortFilter.importance),
@@ -87,7 +87,7 @@ class FilterTasksBottomSheet extends StatelessWidget {
                 // ),
                 CheckboxInputField(
                     value: state.showCompletedTasks,
-                    title: 'Show completed tasks',
+                    title: context.translator.showCompletedTasks,
                     onChanged: (e) => e == null
                         ? null
                         : context
@@ -102,7 +102,7 @@ class FilterTasksBottomSheet extends StatelessWidget {
 
                           context.read<TaskFilteringCubit>().cancel();
                         },
-                        child: const Text('Cancel')),
+                        child:  Text(context.translator.cancel)),
                     SizedBox(width: theme.spacing.small),
                     FilledButton(
                         onPressed: () {
@@ -111,7 +111,7 @@ class FilterTasksBottomSheet extends StatelessWidget {
                               .apply(context.translator);
                           Navigator.pop(context);
                         },
-                        child: Text("Apply", style: theme.actionTextStyle)),
+                        child: Text(context.translator.apply, style: theme.actionTextStyle)),
                   ],
                 ),
               ]),

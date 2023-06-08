@@ -22,6 +22,8 @@ abstract class HomeRepository {
       CompleteTaskParams params);
   Future<Either<TaskFailure, UncompleteTaskResponse>> uncompleteTask(
       UncompleteTaskParams params);
+  Future<Either<TaskFailure, bool>> needsMigration(String homeId);
+  Future<Either<TaskFailure, bool>> migrate(String homeId);
 }
 
 class CreateHomeParams {

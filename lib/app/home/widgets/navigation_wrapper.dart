@@ -44,8 +44,7 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
               create: (context) {
                 return TasksCubit(locator(),
                     home: homesState.currentHome, type: TaskType.chore)
-                  ..getTasks(
-                      home: homesState.currentHome, translator: translator);
+                  ..checkForMigration(homesState.currentHome, translator);
               },
             ),
             BlocProvider(

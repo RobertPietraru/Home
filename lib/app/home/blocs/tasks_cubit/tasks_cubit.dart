@@ -123,4 +123,33 @@ class TasksCubit extends Cubit<TasksState> {
           state.copyWith(tasks: list, error: null, status: TasksStatus.loaded));
     });
   }
+
+  Future<void> checkForMigration(HomeEntity home, Translator translator) async {
+    final response = await homeRepository.needsMigration(home.id);
+    await response.fold(
+      (l) {
+        emit(state.copyWith(
+            status: TasksStatus.error,
+            error: AppFailure.fromTaskFailure(l, translator)));
+      },
+      (needsMigration) async {
+        if (needsMigration) {
+          final response = await homeRepository.migrate(home.id);
+          await response.fold(
+            (l) {
+              emit(
+                state.copyWith(
+                    error: AppFailure(
+                        code: 'migration-failed',
+                        message: translator.internalTaskError)),
+              );
+            },
+            (r) async => await getTasks(home: home, translator: translator),
+          );
+        } else {
+          await getTasks(home: home, translator: translator);
+        }
+      },
+    );
+  }
 }

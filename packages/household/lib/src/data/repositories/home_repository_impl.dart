@@ -160,4 +160,32 @@ class HomeRepositoryIMPL implements HomeRepository {
       return const Left(UnknownTaskFailure());
     }
   }
+
+  @override
+  Future<Either<TaskFailure, bool>> migrate(String homeId) async {
+    try {
+      await homeRemoteDataSource.migrate(homeId);
+      return const Right(true);
+    } on TaskFailure catch (e) {
+      return Left(e);
+    } on FirebaseException catch (e) {
+      return Left(TaskFailureDto.fromFirebaseException(e));
+    } catch (e) {
+      return const Left(UnknownTaskFailure());
+    }
+  }
+
+  @override
+  Future<Either<TaskFailure, bool>> needsMigration(String homeId) async {
+    try {
+      final response = await homeRemoteDataSource.needsMigration(homeId);
+      return Right(response);
+    } on TaskFailure catch (e) {
+      return Left(e);
+    } on FirebaseException catch (e) {
+      return Left(TaskFailureDto.fromFirebaseException(e));
+    } catch (e) {
+      return const Left(UnknownTaskFailure());
+    }
+  }
 }

@@ -32,7 +32,7 @@ class AppFailure extends Equatable {
   const AppFailure(
       {this.fieldWithIssue, required this.code, required this.message});
 
-  static AppFailure fromAuthFailure(
+  factory AppFailure.fromAuthFailure(
       AuthFailure failure, Translator translator) {
     final errors = {
       DisabledUserFailure: AppFailure(
@@ -100,7 +100,7 @@ class AppFailure extends Equatable {
         );
   }
 
-  static AppFailure fromValidationFailure(
+  factory AppFailure.fromValidationFailure(
       ValidationFailure failure, Translator translator) {
     final x = {
       AuthConfirmPasswordEmptyValidationFailure: AppFailure(
@@ -155,7 +155,7 @@ class AppFailure extends Equatable {
         );
   }
 
-  static AppFailure fromTaskFailure(
+  factory AppFailure.fromTaskFailure(
       TaskFailure failure, Translator translator) {
     final x = {
       UnknownTaskFailure: AppFailure(

@@ -129,7 +129,8 @@ class TaskList extends StatelessWidget {
         ];
       }, body: BlocBuilder<TasksCubit, TasksState>(
         builder: (context, state) {
-          if (state.status == TasksStatus.loading) {
+          if (state.status == TasksStatus.loading ||
+              state.status == TasksStatus.initial) {
             return const Center(
               child: CircularProgressIndicator(),
             );

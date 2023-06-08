@@ -6,6 +6,7 @@ class HomesState extends Equatable {
   final List<HomeEntity> homes;
   final AppFailure? failure;
   final HomesStatus status;
+  
   const HomesState({
     required this.homes,
     this.failure,

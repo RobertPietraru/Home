@@ -17,6 +17,8 @@ abstract class HomeRemoteDataSource {
 
   Future<CreateTaskResponse> createTask(CreateTaskParams params);
   Future<DeleteTaskResponse> deleteTask(DeleteTaskParams params);
+  Future<bool> needsMigration(String homeId);
+  Future<void> migrate(String homeId);
 }
 
 class FirestoreUtils {
@@ -25,33 +27,13 @@ class FirestoreUtils {
   final String usersCollectionName = 'users';
   final String homesCollectionName = 'homes';
 
-  final String shoppingListCollectionName = 'shopping_list';
-  final String choreListCollectionName = 'chore_list';
-
-  final String tasksCollectionName = 'tasks';
-
   CollectionReference<Map<String, dynamic>> get usersCollection =>
       _db.collection(usersCollectionName);
   CollectionReference<Map<String, dynamic>> get homesCollection =>
       _db.collection(homesCollectionName);
 
-  CollectionReference<Map<String, dynamic>> getChoresListForHome(
-      String homeId) {
-    return homesCollection.doc(homeId).collection(choreListCollectionName);
-  }
-
-  CollectionReference<Map<String, dynamic>> getListForHome(
-      String homeId, TaskType type) {
-    if (type == TaskType.chore) {
-      return getChoresListForHome(homeId);
-    } else {
-      return getShoppingListForHome(homeId);
-    }
-  }
-
-  CollectionReference<Map<String, dynamic>> getShoppingListForHome(
-      String homeId) {
-    return homesCollection.doc(homeId).collection(shoppingListCollectionName);
+  CollectionReference<Map<String, dynamic>> getList(String homeId) {
+    return homesCollection.doc(homeId).collection('tasks');
   }
 }
 
@@ -111,35 +93,12 @@ class HomeFirebaseDataSourceIMPL implements HomeRemoteDataSource {
 
   @override
   Future<GetTasksResponse> getTasks(GetTasksParams params) async {
-    Query<Map<String, dynamic>> collection =
-        _db.getListForHome(params.homeId, params.type);
+    Query<Map<String, dynamic>> collection = _db.getList(params.homeId);
+    collection =
+        collection.where(TaskDto.typeField, isEqualTo: params.type.name);
 
     if (params.filters != null) {
-      final filters = params.filters!;
-      int count = 0;
-      if (filters.sortFilters.contains(TaskSortFilter.creationDate)) {
-        collection =
-            collection.orderBy(TaskDto.creationDateField, descending: true);
-        count++;
-      }
-      if (filters.sortFilters.contains(TaskSortFilter.deadline)) {
-        collection =
-            collection.orderBy(TaskDto.deadlineField, descending: false);
-        count++;
-      }
-      if (count != 2 &&
-          filters.sortFilters.contains(TaskSortFilter.importance)) {
-        collection =
-            collection.orderBy(TaskDto.importanceField, descending: true);
-      }
-
-      if (!filters.showCompletedTasks) {
-        collection =
-            collection.where(TaskDto.isCompletedField, isEqualTo: false);
-      }
-      if (filters.assigneeId != null) {
-        //TODO: implement asignee based sorting
-      }
+      collection = _applyFilters(params.filters!, collection);
     }
 
     final documents = (await collection.get()).docs;
@@ -149,14 +108,34 @@ class HomeFirebaseDataSourceIMPL implements HomeRemoteDataSource {
             .toList());
   }
 
+  Query<Map<String, dynamic>> _applyFilters(
+      TaskFilters filters, Query<Map<String, dynamic>> collection) {
+    int count = 0;
+    if (filters.sortFilters.contains(TaskSortFilter.creationDate)) {
+      collection =
+          collection.orderBy(TaskDto.creationDateField, descending: true);
+      count++;
+    }
+    if (filters.sortFilters.contains(TaskSortFilter.deadline)) {
+      collection = collection.orderBy(TaskDto.deadlineField, descending: false);
+      count++;
+    }
+    if (count != 2 && filters.sortFilters.contains(TaskSortFilter.importance)) {
+      collection =
+          collection.orderBy(TaskDto.importanceField, descending: true);
+    }
+
+    if (!filters.showCompletedTasks) {
+      collection = collection.where(TaskDto.isCompletedField, isEqualTo: false);
+    }
+
+    return collection;
+  }
+
   @override
   Future<CompleteTaskResponse> completeTask(CompleteTaskParams params) async {
-    late final CollectionReference<Map<String, dynamic>> collection;
-    if (params.task.type == TaskType.chore) {
-      collection = _db.getChoresListForHome(params.task.homeId);
-    } else {
-      collection = _db.getShoppingListForHome(params.task.homeId);
-    }
+    final CollectionReference<Map<String, dynamic>> collection =
+        _db.getList(params.task.homeId);
 
     await collection.doc(params.task.id).update({
       TaskDto.isCompletedField: true,
@@ -169,12 +148,8 @@ class HomeFirebaseDataSourceIMPL implements HomeRemoteDataSource {
   @override
   Future<UncompleteTaskResponse> uncompleteTask(
       UncompleteTaskParams params) async {
-    late final CollectionReference<Map<String, dynamic>> collection;
-    if (params.task.type == TaskType.chore) {
-      collection = _db.getChoresListForHome(params.task.homeId);
-    } else {
-      collection = _db.getShoppingListForHome(params.task.homeId);
-    }
+    final CollectionReference<Map<String, dynamic>> collection =
+        _db.getList(params.task.homeId);
 
     await collection.doc(params.task.id).update({
       TaskDto.isCompletedField: false,
@@ -187,7 +162,7 @@ class HomeFirebaseDataSourceIMPL implements HomeRemoteDataSource {
 
   @override
   Future<CreateTaskResponse> createTask(CreateTaskParams params) async {
-    final collection = _db.getListForHome(params.homeId, params.type);
+    final collection = _db.getList(params.homeId);
 
     final mockEntity = TaskDto(
         homeId: params.homeId,
@@ -206,8 +181,47 @@ class HomeFirebaseDataSourceIMPL implements HomeRemoteDataSource {
 
   @override
   Future<DeleteTaskResponse> deleteTask(DeleteTaskParams params) async {
-    final collection = _db.getListForHome(params.task.homeId, params.task.type);
+    final collection = _db.getList(params.task.homeId);
     await collection.doc(params.task.id).delete();
     return const DeleteTaskResponse();
+  }
+
+  @override
+  Future<void> migrate(String homeId) async {
+    final chores = (await FirebaseFirestore.instance
+            .collection('homes')
+            .doc(homeId)
+            .collection('chore_list')
+            .get())
+        .docs;
+    final shopping = (await FirebaseFirestore.instance
+            .collection('homes')
+            .doc(homeId)
+            .collection('shopping_list')
+            .get())
+        .docs;
+    final list = [...chores, ...shopping];
+    final tasks = list.map((e) => TaskDto.fromMap(e.data(), e.id)).toList();
+    for (var task in tasks) {
+      await _db.getList(homeId).doc(task.id).set(task.toMap());
+    }
+  }
+
+  @override
+  Future<bool> needsMigration(String homeId) async {
+    final chores = (await FirebaseFirestore.instance
+            .collection('homes')
+            .doc(homeId)
+            .collection('chore_list')
+            .get())
+        .docs;
+    final shopping = (await FirebaseFirestore.instance
+            .collection('homes')
+            .doc(homeId)
+            .collection('shopping_list')
+            .get())
+        .docs;
+    final tasks = (await _db.getList(homeId).limit(1).get()).docs;
+    return tasks.isEmpty && (chores.isNotEmpty || shopping.isNotEmpty);
   }
 }
