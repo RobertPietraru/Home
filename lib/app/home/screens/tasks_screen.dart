@@ -9,17 +9,17 @@ import 'package:household/household.dart';
 
 import '../../../injection.dart';
 import '../blocs/tasks_cubit/tasks_cubit.dart';
-import '../screens/no_home_screen.dart';
+import 'no_home_screen.dart';
 import '../views/drawer_view.dart';
 
-class NavigationWrapper extends StatefulWidget {
-  const NavigationWrapper({super.key});
+class TasksScreen extends StatefulWidget {
+  const TasksScreen({super.key});
 
   @override
-  State<NavigationWrapper> createState() => _NavigationWrapperState();
+  State<TasksScreen> createState() => _TasksScreenState();
 }
 
-class _NavigationWrapperState extends State<NavigationWrapper> {
+class _TasksScreenState extends State<TasksScreen> {
   int index = 0;
   @override
   Widget build(BuildContext context) {

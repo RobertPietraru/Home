@@ -4,10 +4,10 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:homeapp/app/auth/registration/registration_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:homeapp/app/home/blocs/homes_cubit/homes_cubit.dart';
-import 'package:homeapp/app/home/widgets/navigation_wrapper.dart';
 import '../core/components/theme/app_theme.dart';
 import '../core/components/theme/app_theme_data.dart';
 import '../injection.dart';
+import 'app/home/screens/tasks_screen.dart';
 import 'core/blocs/auth_bloc/auth_bloc.dart';
 import 'core/blocs/language_cubit/language_cubit.dart';
 
@@ -54,7 +54,7 @@ class _MyAppState extends State<MyApp> {
                             return BlocProvider(
                               create: (context) => HomesCubit(locator())
                                 ..getHomesOfUser(state.userEntity!.id, context),
-                              child: const NavigationWrapper(),
+                              child: const TasksScreen(),
                             );
                           case AuthUnauthenticatedState:
                             return const RegistrationScreen();
