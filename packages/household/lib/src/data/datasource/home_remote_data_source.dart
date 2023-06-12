@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:household/src/data/dtos/project_dto.dart';
 
 import '../../domain/domain.dart';
 import '../dtos/home_dto.dart';
@@ -19,22 +20,8 @@ abstract class HomeRemoteDataSource {
   Future<DeleteTaskResponse> deleteTask(DeleteTaskParams params);
   Future<bool> needsMigration(String homeId);
   Future<void> migrate(String homeId);
-}
 
-class FirestoreUtils {
-  final _db = FirebaseFirestore.instance;
-  final int homesLimit = 3;
-  final String usersCollectionName = 'users';
-  final String homesCollectionName = 'homes';
-
-  CollectionReference<Map<String, dynamic>> get usersCollection =>
-      _db.collection(usersCollectionName);
-  CollectionReference<Map<String, dynamic>> get homesCollection =>
-      _db.collection(homesCollectionName);
-
-  CollectionReference<Map<String, dynamic>> getList(String homeId) {
-    return homesCollection.doc(homeId).collection('tasks');
-  }
+  Future<GetProjectsResponse> getProjects(GetProjectsParams params);
 }
 
 class HomeFirebaseDataSourceIMPL implements HomeRemoteDataSource {
@@ -93,7 +80,7 @@ class HomeFirebaseDataSourceIMPL implements HomeRemoteDataSource {
 
   @override
   Future<GetTasksResponse> getTasks(GetTasksParams params) async {
-    Query<Map<String, dynamic>> collection = _db.getList(params.homeId);
+    Query<Map<String, dynamic>> collection = _db.taskCollection(params.homeId);
     collection =
         collection.where(TaskDto.typeField, isEqualTo: params.type.name);
 
@@ -135,7 +122,7 @@ class HomeFirebaseDataSourceIMPL implements HomeRemoteDataSource {
   @override
   Future<CompleteTaskResponse> completeTask(CompleteTaskParams params) async {
     final CollectionReference<Map<String, dynamic>> collection =
-        _db.getList(params.task.homeId);
+        _db.taskCollection(params.task.homeId);
 
     await collection.doc(params.task.id).update({
       TaskDto.isCompletedField: true,
@@ -149,7 +136,7 @@ class HomeFirebaseDataSourceIMPL implements HomeRemoteDataSource {
   Future<UncompleteTaskResponse> uncompleteTask(
       UncompleteTaskParams params) async {
     final CollectionReference<Map<String, dynamic>> collection =
-        _db.getList(params.task.homeId);
+        _db.taskCollection(params.task.homeId);
 
     await collection.doc(params.task.id).update({
       TaskDto.isCompletedField: false,
@@ -162,7 +149,7 @@ class HomeFirebaseDataSourceIMPL implements HomeRemoteDataSource {
 
   @override
   Future<CreateTaskResponse> createTask(CreateTaskParams params) async {
-    final collection = _db.getList(params.homeId);
+    final collection = _db.taskCollection(params.homeId);
 
     final mockEntity = TaskDto(
         homeId: params.homeId,
@@ -181,7 +168,7 @@ class HomeFirebaseDataSourceIMPL implements HomeRemoteDataSource {
 
   @override
   Future<DeleteTaskResponse> deleteTask(DeleteTaskParams params) async {
-    final collection = _db.getList(params.task.homeId);
+    final collection = _db.taskCollection(params.task.homeId);
     await collection.doc(params.task.id).delete();
     return const DeleteTaskResponse();
   }
@@ -203,7 +190,7 @@ class HomeFirebaseDataSourceIMPL implements HomeRemoteDataSource {
     final list = [...chores, ...shopping];
     final tasks = list.map((e) => TaskDto.fromMap(e.data(), e.id)).toList();
     for (var task in tasks) {
-      await _db.getList(homeId).doc(task.id).set(task.toMap());
+      await _db.taskCollection(homeId).doc(task.id).set(task.toMap());
     }
   }
 
@@ -221,7 +208,42 @@ class HomeFirebaseDataSourceIMPL implements HomeRemoteDataSource {
             .collection('shopping_list')
             .get())
         .docs;
-    final tasks = (await _db.getList(homeId).limit(1).get()).docs;
+    final tasks = (await _db.taskCollection(homeId).limit(1).get()).docs;
     return tasks.isEmpty && (chores.isNotEmpty || shopping.isNotEmpty);
+  }
+
+  @override
+  Future<GetProjectsResponse> getProjects(GetProjectsParams params) async {
+    final projects = (await FirebaseFirestore.instance
+            .collection('homes')
+            .doc(params.homeId)
+            .collection(_db.projectsCollectionName)
+            .get())
+        .docs;
+    return GetProjectsResponse(
+      projects: projects
+          .map((e) => ProjectDto.fromMap(e.data(), e.id).toEntity())
+          .toList(),
+    );
+  }
+
+
+}
+
+class FirestoreUtils {
+  final _db = FirebaseFirestore.instance;
+  final int homesLimit = 3;
+  final String usersCollectionName = 'users';
+  final String homesCollectionName = 'homes';
+  final String projectsCollectionName = 'homes';
+  final String subtasksCollectionName = 'tasks';
+
+  CollectionReference<Map<String, dynamic>> get usersCollection =>
+      _db.collection(usersCollectionName);
+  CollectionReference<Map<String, dynamic>> get homesCollection =>
+      _db.collection(homesCollectionName);
+
+  CollectionReference<Map<String, dynamic>> taskCollection(String homeId) {
+    return homesCollection.doc(homeId).collection('tasks');
   }
 }

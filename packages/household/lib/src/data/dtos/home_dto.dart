@@ -32,8 +32,7 @@ class HomeDto extends Equatable {
 
   factory HomeDto.fromSnapshot(DocumentSnapshot snapshot) => HomeDto(
         name: snapshot[nameField],
-        people:
-            (snapshot[peopleField] as List<dynamic>).map((e) => "$e").toList(),
+        people: (snapshot[peopleField] as List<dynamic>).map((e) => "$e").toList(),
         admins:
             (snapshot[adminsField] as List<dynamic>).map((e) => "$e").toList(),
         id: snapshot.id,

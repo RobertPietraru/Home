@@ -188,4 +188,19 @@ class HomeRepositoryIMPL implements HomeRepository {
       return const Left(UnknownTaskFailure());
     }
   }
+
+  @override
+  Future<Either<TaskFailure, GetProjectsResponse>> getprojects(
+      GetProjectsParams params) async {
+    try {
+      final response = await homeRemoteDataSource.getProjects(params);
+      return Right(response);
+    } on TaskFailure catch (e) {
+      return Left(e);
+    } on FirebaseException catch (e) {
+      return Left(TaskFailureDto.fromFirebaseException(e));
+    } catch (e) {
+      return const Left(UnknownTaskFailure());
+    }
+  }
 }

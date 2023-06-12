@@ -1,10 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:household/src/domain/failures/backend/aborted_task_failure.dart';
-import 'package:household/src/domain/failures/backend/internal_task_failure.dart';
-import 'package:household/src/domain/failures/backend/invalid_input_task_failure.dart';
-import 'package:household/src/domain/failures/backend/missing_authentication_task_failure.dart';
-import 'package:household/src/domain/failures/backend/missing_permissions_task_failure.dart';
-import 'package:household/src/domain/failures/unknown_task_failure.dart';
 
 import '../../domain/domain.dart';
 

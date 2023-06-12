@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
+import 'package:household/src/domain/entities/project_entity.dart';
 import '../entities/tasks_entities.dart';
 import '../failures/task_failure.dart';
 
@@ -22,8 +23,23 @@ abstract class HomeRepository {
       CompleteTaskParams params);
   Future<Either<TaskFailure, UncompleteTaskResponse>> uncompleteTask(
       UncompleteTaskParams params);
+  Future<Either<TaskFailure, GetProjectsResponse>> getprojects(
+      GetProjectsParams params);
   Future<Either<TaskFailure, bool>> needsMigration(String homeId);
   Future<Either<TaskFailure, bool>> migrate(String homeId);
+}
+
+class GetProjectsParams {
+  final String userId;
+  final String homeId;
+
+  GetProjectsParams({required this.userId, required this.homeId});
+}
+
+class GetProjectsResponse {
+  final List<ProjectEntity> projects;
+
+  const GetProjectsResponse({required this.projects});
 }
 
 class CreateHomeParams {

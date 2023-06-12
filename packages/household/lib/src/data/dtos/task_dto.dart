@@ -89,8 +89,7 @@ class TaskDto {
       importance: map[importanceField],
       type: TaskType.values
           .firstWhere((element) => map[typeField] == element.name),
-      creationDate:
-          ((map[creationDateField] as Timestamp?) ?? Timestamp.now()).toDate(),
+      creationDate: ((map[creationDateField] as Timestamp?) ?? Timestamp.now()).toDate(),
     );
   }
 }
