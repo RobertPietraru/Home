@@ -32,7 +32,6 @@ class _TaskCreationScreen extends StatelessWidget {
   final HomeEntity home;
   final TaskType type;
   const _TaskCreationScreen({
-    super.key,
     required this.home,
     required this.type,
   });

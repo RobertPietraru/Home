@@ -25,15 +25,29 @@ abstract class HomeRepository {
       UncompleteTaskParams params);
   Future<Either<TaskFailure, GetProjectsResponse>> getprojects(
       GetProjectsParams params);
+  Future<Either<TaskFailure, GetTasksForProjectResponse>> getTasksForProject(
+      GetTasksForProjectParams params);
   Future<Either<TaskFailure, bool>> needsMigration(String homeId);
   Future<Either<TaskFailure, bool>> migrate(String homeId);
+}
+
+class GetTasksForProjectParams {
+  final ProjectEntity project;
+
+  const GetTasksForProjectParams({required this.project});
+}
+
+class GetTasksForProjectResponse {
+  final List<TaskEntity> tasks;
+
+  const GetTasksForProjectResponse({required this.tasks});
 }
 
 class GetProjectsParams {
   final String userId;
   final String homeId;
 
-  GetProjectsParams({required this.userId, required this.homeId});
+  const GetProjectsParams({required this.userId, required this.homeId});
 }
 
 class GetProjectsResponse {

@@ -22,6 +22,9 @@ abstract class HomeRemoteDataSource {
   Future<void> migrate(String homeId);
 
   Future<GetProjectsResponse> getProjects(GetProjectsParams params);
+
+  Future<GetTasksForProjectResponse> getTasksForProject(
+      GetTasksForProjectParams params);
 }
 
 class HomeFirebaseDataSourceIMPL implements HomeRemoteDataSource {
@@ -227,7 +230,23 @@ class HomeFirebaseDataSourceIMPL implements HomeRemoteDataSource {
     );
   }
 
+  @override
+  Future<GetTasksForProjectResponse> getTasksForProject(
+      GetTasksForProjectParams params) async {
+    final tasks = (await FirebaseFirestore.instance
+            .collection('homes')
+            .doc(params.project.homeId)
+            .collection(_db.projectsCollectionName)
+            .doc(params.project.id)
+            .collection(_db.subtasksCollectionName)
+            .get())
+        .docs;
 
+    return GetTasksForProjectResponse(
+        tasks: tasks
+            .map((e) => TaskDto.fromMap(e.data(), e.id).toEntity())
+            .toList());
+  }
 }
 
 class FirestoreUtils {
