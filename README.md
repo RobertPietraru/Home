@@ -21,7 +21,7 @@ Pietrocka Home follows a clean architecture pattern with a modified approach, pa
 - **Common Layer:** Contains shared resources such as localization, themes, and utilities.
 - **Dependency Injection:** Dependency injection is implemented using the `get_it` package, making it easy to manage and inject dependencies throughout the app.
 
-!! Domain and data are split into different features in the form of package to more effectively isolate them.
+!! Domain and data are split into different features in the form of packages to more effectively isolate them.
 
 ## Setup
 
