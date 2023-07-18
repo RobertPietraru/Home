@@ -2,6 +2,8 @@
 
 Pietrocka Home is a household management app built with Flutter that allows users to create and manage a shared list of chores and a shopping list, ensuring that all members of the household have access to the same information.
 
+"Sorry, I forgot to buy bread" will no longer be said if you use Pietrocka Home!
+
 ## Features
 - **Shared Chore List:** Create and manage a list of chores that can be accessed and updated by all members of the household.
 - **Shared Shopping List:** Maintain a shared shopping list where users can add items that need to be purchased.
