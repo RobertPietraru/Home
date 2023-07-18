@@ -42,25 +42,20 @@ dependencies:
   get_it: ^7.3.0
   formz: ^0.6.0
   flutter_svg: ^1.1.6
-  auto_size_text: ^3.0.0-nullsafety.0
   google_fonts: ^4.0.3
 
   hive_flutter: ^1.1.0
   uuid: ^3.0.7
-  image_picker: ^0.8.7+4
-
   firebase_storage: ^11.2.0
   firebase_auth: ^4.4.1
   cloud_firestore: ^4.8.0
   firebase_core: ^2.10.0
 
   path: ^1.8.2
-  fl_chart: ^0.62.0
   flutter_localizations:
     sdk: flutter
   intl: any
   shared_preferences: ^2.1.1
-  dart_openai: ^1.9.91
   flutter_dotenv: ^5.0.2
   auth:
     path: packages/auth
