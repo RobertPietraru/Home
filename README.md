@@ -1,4 +1,5 @@
 # Pietrocka Home
+https://pietrockahome.web.app/
 
 Pietrocka Home is a household management app built with Flutter that allows users to create and manage a shared list of chores and a shopping list, ensuring that all members of the household have access to the same information.
 
