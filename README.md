@@ -29,9 +29,10 @@ To get started with Pietrocka Home, follow these steps:
 1. Clone the repository
 2. Ensure that you have Flutter and Dart installed on your machine.
 3. Install the project dependencies by running `flutter pub get` in the project directory.
-4. Set up Firebase backend:
-   - Create a new Firebase project at [Firebase Console](https://console.firebase.google.com).
-   - Enable authentication and firestore
-6. Run flutter create . to create the android and iOS folder
+4. Set up Firebase backend then enable authentication and firestore.
+6. Run flutter create . to create the android, iOS and web folders 
 5. Configure Firebase for the project using the flutterfire cli
 6. Build and run the app on your desired device
+
+# Acknowledgements
+I dedicate this app to my mother, because she inspired me to build it and is the most active user. Love you mom! :) 
